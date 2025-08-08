@@ -56,7 +56,14 @@ jobs:
         run: mypy
       - name: Tests with coverage
         run: |
-          pytest -q -rA -vv
+          pytest -q -rA -vv --junitxml=test-results-${{ runner.os }}-py${{ matrix.python-version }}.xml
+      - name: Upload test results and coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-artifacts-${{ runner.os }}-py${{ matrix.python-version }}
+          path: |
+            test-results-${{ runner.os }}-py${{ matrix.python-version }}.xml
+            coverage.xml
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
@@ -115,7 +122,14 @@ jobs:
           OPENBLAS_NUM_THREADS: '1'
           OMP_NUM_THREADS: '1'
         run: |
-          pytest -q -k "not benchmark" 
+          pytest -q -rA -vv -k "not benchmark" --junitxml=test-results-locked.xml || true
+      - name: Upload smoke test artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-artifacts-locked
+          path: |
+            test-results-locked.xml
+            coverage.xml
 
   reproduce-small-locked:
     name: Reproduce small dataset with hashed pip lock
@@ -236,12 +250,21 @@ jobs:
       - name: Tool versions
         run: |
           set -euxo pipefail
-          cyclonedx-py --version || true
+          command -v cyclonedx-bom && cyclonedx-bom --version || true
+          command -v cyclonedx-py && cyclonedx-py --version || true
           pip list | grep -i cyclonedx || true
       - name: Generate SBOM
         run: |
-          # Generate a Python environment SBOM; fall back to requirements if needed
-          cyclonedx-py -o sbom.json || cyclonedx-py -o sbom.json -e runtime
+          # Generate a Python environment SBOM; try both CLI names and fall back to runtime env
+          set -euxo pipefail
+          if command -v cyclonedx-bom >/dev/null 2>&1; then
+            cyclonedx-bom -o sbom.json -e pip || cyclonedx-bom -o sbom.json -e runtime
+          elif command -v cyclonedx-py >/dev/null 2>&1; then
+            cyclonedx-py -o sbom.json || cyclonedx-py -o sbom.json -e runtime
+          else
+            echo "No cyclonedx CLI found" >&2
+            exit 1
+          fi
       - name: Upload SBOM
         uses: actions/upload-artifact@v4
         with:
