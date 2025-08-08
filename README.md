@@ -13,6 +13,23 @@ builders; and a small CLI.
 
 Archival: releases are archived on Zenodo with a DOI. After cutting a GitHub release, enable Zenodo for this repo and replace the placeholder DOI badge/link above with the minted DOI for that tag.
 
+## Quickstart (60s)
+
+1. Install dev deps and run tests with coverage:
+
+```bash
+pip install -e .[dev]
+pytest -q
+```
+
+2. Minimal reproducible run (<1 min) writing results/YYYY-MM-DD_HHMM/*:
+
+```bash
+make reproduce-min
+```
+
+See docs for details.
+
 ## Install
 
 Python 3.11+ is required.

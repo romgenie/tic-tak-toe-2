@@ -61,9 +61,12 @@ def get_git_commit() -> str | None:
     """
     root = repo_root()
     try:
-        out = subprocess.check_output([
-            "git", "-C", str(root), "rev-parse", "HEAD"
-        ], stderr=subprocess.DEVNULL, text=True, timeout=2.0)
+        out = subprocess.check_output(
+            ["git", "-C", str(root), "rev-parse", "HEAD"],
+            stderr=subprocess.DEVNULL,
+            text=True,
+            timeout=2.0,
+        )
         return out.strip()
     except Exception:
         # Try reading .git/HEAD and ref file
@@ -87,9 +90,12 @@ def get_git_is_dirty() -> bool | None:
     """
     root = repo_root()
     try:
-        out = subprocess.check_output([
-            "git", "-C", str(root), "status", "--porcelain"
-        ], stderr=subprocess.DEVNULL, text=True, timeout=2.0)
+        out = subprocess.check_output(
+            ["git", "-C", str(root), "status", "--porcelain"],
+            stderr=subprocess.DEVNULL,
+            text=True,
+            timeout=2.0,
+        )
         return len(out.strip()) > 0
     except Exception:
         return None

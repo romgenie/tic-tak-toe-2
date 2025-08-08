@@ -377,6 +377,66 @@
   
   
     <li class="md-nav__item">
+      <a href="../experiments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Experiments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../results/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Results
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ablations/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ablations
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../benchmarks/" class="md-nav__link">
         
   
@@ -424,10 +484,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -438,8 +498,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             API Reference
           </label>
@@ -547,9 +607,9 @@
 <p>Preprocessing: Only deterministic numerical transforms; no randomness. Optional symmetry augmentation can expand state-action coverage.</p>
 <p>Features: Positional control, threats, connectivity, pattern strength, phase, and per-cell open-line counts. Policies obey probability constraints and are zero outside legal moves.</p>
 <p>Potential biases: Tic-tac-toe is trivial; policy mass concentrates on optimal moves. Augmentation changes class balance across action rows.</p>
-<p>Licensing: MIT; see LICENSE.</p>
+<p>Licensing: Code is MIT. Generated datasets are CC BY 4.0 unless otherwise stated; see README.</p>
 <p>Intended uses: Teaching, benchmarking, verifying RL targets. Misuses: Treating counts as representative of stochastic games or non-perfect-play agents.</p>
-<p>Determinism &amp; Manifest: The manifest.json includes row counts, checksums, orbit_size_distribution, terminal_split, parquet_written, and schema hashes. The schemas are emitted under export/schema/*.schema.json.</p>
+<p>Determinism &amp; Manifest: The manifest.json includes row counts, checksums, orbit_size_distribution, terminal_split, parquet_written, and schema hashes. The schemas are emitted under export/schema/*.schema.json and are versioned implicitly via <code>dataset_version</code>.</p>
 <h2 id="parquet-outputs">Parquet outputs<a class="headerlink" href="#parquet-outputs" title="Permanent link">&para;</a></h2>
 <p>Parquet is written only when explicitly requested via <code>--format parquet</code> or <code>--format both</code> and when the optional dependencies are installed:</p>
 <ul>

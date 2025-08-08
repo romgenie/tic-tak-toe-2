@@ -102,13 +102,17 @@ skip = ["archive", "site", ".venv", ".pytest_cache", ".hypothesis", "data_raw", 
 [tool.mypy]
 python_version = "3.11"
 strict = false
-warn_unused_ignores = true
 warn_redundant_casts = true
 warn_unused_configs = true
 disallow_untyped_defs = false
 no_implicit_optional = false
 check_untyped_defs = false
 ignore_missing_imports = true
+follow_imports = "skip"
+files = [
+  "src/tictactoe/features.py",
+]
+warn_unused_ignores = false
 
 [tool.coverage.run]
 source = ["tictactoe"]

@@ -4,6 +4,7 @@ Datasets helpers for Tic-Tac-Toe using the modular pipeline.
 This module builds state and state-action datasets by composing solver and
 feature orchestration utilities.
 """
+
 from __future__ import annotations
 
 import csv
@@ -18,10 +19,10 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from .orchestrator import extract_board_features, generate_state_action_dataset
-from .tracking import log_artifact, log_params, maybe_mlflow_run
 from .paths import get_git_commit, get_git_is_dirty
 from .solver import solve_all_reachable
 from .symmetry import symmetry_info
+from .tracking import log_artifact, log_params
 
 
 @dataclass
@@ -46,8 +47,9 @@ def _schema_hash(rows: List[Dict[str, Any]]) -> str:
 
 
 def run_export(args: ExportArgs) -> Path:
-    logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO,
-                        format="[%(levelname)s] %(message)s")
+    logging.basicConfig(
+        level=logging.DEBUG if args.verbose else logging.INFO, format="[%(levelname)s] %(message)s"
+    )
     args.out.mkdir(parents=True, exist_ok=True)
 
     # Optional tracking context (no-op if mlflow not used)
@@ -63,6 +65,7 @@ def run_export(args: ExportArgs) -> Path:
         board = [int(c) for c in key]
         # accumulate terminal split from raw boards
         from .game_basics import get_winner, is_draw
+
         w = get_winner(board)
         if w == 1:
             term_counts["x"] += 1
@@ -71,7 +74,7 @@ def run_export(args: ExportArgs) -> Path:
         elif is_draw(board):
             term_counts["draw"] += 1
         if args.canonical_only:
-            canon = symmetry_info(board)['canonical_form']
+            canon = symmetry_info(board)["canonical_form"]
             if key != canon:
                 continue
         rows_states.append(
@@ -84,9 +87,7 @@ def run_export(args: ExportArgs) -> Path:
         )
     logging.info(
         "Building state-action rows%s…",
-        " with augmentation"
-        if args.include_augmentation and not args.canonical_only
-        else "",
+        " with augmentation" if args.include_augmentation and not args.canonical_only else "",
     )
     rows_sa = generate_state_action_dataset(
         solved,
@@ -96,23 +97,27 @@ def run_export(args: ExportArgs) -> Path:
     )
 
     # Prepare output paths
-    states_csv = args.out / 'ttt_states.csv'
-    sa_csv = args.out / 'ttt_state_actions.csv'
-    states_parquet_path = args.out / 'ttt_states.parquet'
-    sa_parquet_path = args.out / 'ttt_state_actions.parquet'
+    states_csv = args.out / "ttt_states.csv"
+    sa_csv = args.out / "ttt_state_actions.csv"
+    states_parquet_path = args.out / "ttt_states.parquet"
+    sa_parquet_path = args.out / "ttt_state_actions.parquet"
 
     def write_csv(path: Path, rows: List[Dict[str, Any]]):
         fieldnames = set()
         for r in rows:
             fieldnames.update(r.keys())
         fnames = sorted(fieldnames)
+
         # Deterministic row order: primary by board_state, secondary by action if present
         def _sort_key(r: Dict[str, Any]):
-            return (str(r.get('board_state', '')),
-                    int(r.get('action', -1)) if isinstance(r.get('action', None), int) else -1,
-                    str(r.get('canonical_form', '')))
+            return (
+                str(r.get("board_state", "")),
+                int(r.get("action", -1)) if isinstance(r.get("action", None), int) else -1,
+                str(r.get("canonical_form", "")),
+            )
+
         rows_sorted = sorted(rows, key=_sort_key)
-        with path.open('w', newline='') as f:
+        with path.open("w", newline="") as f:
             w = csv.DictWriter(f, fieldnames=fnames)
             w.writeheader()
             for r in rows_sorted:
@@ -129,15 +134,21 @@ def run_export(args: ExportArgs) -> Path:
         write_csv(states_csv, rows_states)
         write_csv(sa_csv, rows_sa)
         wrote_csv = True
-        logging.info("Wrote CSVs: %s (%d rows), %s (%d rows)",
-                     states_csv, len(rows_states), sa_csv, len(rows_sa))
+        logging.info(
+            "Wrote CSVs: %s (%d rows), %s (%d rows)",
+            states_csv,
+            len(rows_states),
+            sa_csv,
+            len(rows_sa),
+        )
 
     if fmt in {"parquet", "both"}:
-        have_pandas = importlib.util.find_spec('pandas') is not None
-        have_pyarrow = importlib.util.find_spec('pyarrow') is not None
+        have_pandas = importlib.util.find_spec("pandas") is not None
+        have_pyarrow = importlib.util.find_spec("pyarrow") is not None
         if have_pandas and have_pyarrow:
             try:
                 import pandas as pd  # type: ignore
+
                 df_b = pd.DataFrame(rows_states)
                 df_sa = pd.DataFrame(rows_sa)
                 df_b.to_parquet(states_parquet_path)
@@ -145,9 +156,7 @@ def run_export(args: ExportArgs) -> Path:
                 logging.info("Wrote Parquet files to %s", args.out)
                 wrote_parquet = True
             except Exception as e:
-                logging.warning(
-                    "Failed to write Parquet files: %s: %s", type(e).__name__, e
-                )
+                logging.warning("Failed to write Parquet files: %s: %s", type(e).__name__, e)
         else:
             msg = (
                 "Parquet dependencies not available (install pandas and pyarrow). "
@@ -172,6 +181,7 @@ def run_export(args: ExportArgs) -> Path:
     }
     try:
         import sys
+
         py_info["python_version"] = sys.version.split(" ")[0]
     except Exception:
         pass
@@ -187,15 +197,15 @@ def run_export(args: ExportArgs) -> Path:
             continue
 
     # Orbit size distribution
-    orbit_counts = Counter([r.get('orbit_size', None) for r in rows_states])
+    orbit_counts = Counter([r.get("orbit_size", None) for r in rows_states])
     if None in orbit_counts:
         orbit_counts.pop(None)
 
     # Checksums for files we wrote
     def sha256_file(path: Path) -> str:
         h = hashlib.sha256()
-        with path.open('rb') as f:
-            for chunk in iter(lambda: f.read(8192), b''):
+        with path.open("rb") as f:
+            for chunk in iter(lambda: f.read(8192), b""):
                 h.update(chunk)
         return h.hexdigest()
 
@@ -227,9 +237,9 @@ def run_export(args: ExportArgs) -> Path:
         if repo_root is None:
             repo_root = here
         candidates = [
-                ("pip_requirements_lock", repo_root / "requirements-lock.txt"),
-                ("conda_env_spec", repo_root / "environment.yml"),
-            ]
+            ("pip_requirements_lock", repo_root / "requirements-lock.txt"),
+            ("conda_env_spec", repo_root / "environment.yml"),
+        ]
         # Include platform-specific conda lock files if present
         for plat in ("linux-64", "osx-64", "osx-arm64", "win-64"):
             candidates.append((f"conda_lock_{plat}", repo_root / f"conda-{plat}.lock.yml"))
@@ -273,22 +283,24 @@ def run_export(args: ExportArgs) -> Path:
         },
         "files": files,
         "checksums": checksums,
-    "parquet_written": wrote_parquet,
-    "environment_locks": env_locks,
+        "parquet_written": wrote_parquet,
+        "environment_locks": env_locks,
     }
     (args.out / "manifest.json").write_text(json.dumps(manifest, indent=2))
     logging.info("Wrote manifest.json with metadata and schema hashes")
     # Best-effort tracking
     try:
-        log_params({
-            "canonical_only": args.canonical_only,
-            "include_augmentation": args.include_augmentation,
-            "epsilons": ",".join(map(str, args.epsilons)),
-            "normalize_to_move": args.normalize_to_move,
-            "format": args.format,
-            "rows_states": len(rows_states),
-            "rows_state_actions": len(rows_sa),
-        })
+        log_params(
+            {
+                "canonical_only": args.canonical_only,
+                "include_augmentation": args.include_augmentation,
+                "epsilons": ",".join(map(str, args.epsilons)),
+                "normalize_to_move": args.normalize_to_move,
+                "format": args.format,
+                "rows_states": len(rows_states),
+                "rows_state_actions": len(rows_sa),
+            }
+        )
         log_artifact(args.out / "manifest.json")
         if wrote_csv:
             log_artifact(states_csv)
@@ -302,6 +314,7 @@ def run_export(args: ExportArgs) -> Path:
     # Emit JSON Schemas
     schema_dir = args.out / "schema"
     schema_dir.mkdir(parents=True, exist_ok=True)
+
     def infer_schema(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
         props: Dict[str, Any] = {}
         for k in sorted({kk for r in rows for kk in r.keys()}):
@@ -321,10 +334,12 @@ def run_export(args: ExportArgs) -> Path:
                     t = "string"
                 break
             props[k] = {"type": [t, "null"]}
-        return {"$schema": "https://json-schema.org/draft/2020-12/schema",
-                "type": "object",
-                "properties": props,
-                "additionalProperties": False}
+        return {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "type": "object",
+            "properties": props,
+            "additionalProperties": False,
+        }
 
     (schema_dir / "ttt_states.schema.json").write_text(
         json.dumps(infer_schema(rows_states), indent=2)

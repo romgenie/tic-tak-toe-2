@@ -317,6 +317,66 @@
   
   
     <li class="md-nav__item">
+      <a href="../../experiments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Experiments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../results/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Results
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ablations/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ablations
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../benchmarks/" class="md-nav__link">
         
   
@@ -366,10 +426,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" checked>
         
           
-          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -380,8 +440,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_8">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             API Reference
           </label>
@@ -642,8 +702,7 @@ by construction because moves are on indices, not on piece IDs.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/tictactoe/orchestrator.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 39</span>
-<span class="normal"> 40</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 40</span>
 <span class="normal"> 41</span>
 <span class="normal"> 42</span>
 <span class="normal"> 43</span>
@@ -830,7 +889,12 @@ by construction because moves are on indices, not on piece IDs.</p>
 <span class="normal">224</span>
 <span class="normal">225</span>
 <span class="normal">226</span>
-<span class="normal">227</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">extract_board_features</span><span class="p">(</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">extract_board_features</span><span class="p">(</span>
     <span class="n">board</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
     <span class="n">solved_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">],</span>
     <span class="n">lambda_temp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
@@ -865,15 +929,17 @@ by construction because moves are on indices, not on piece IDs.</p>
 
     <span class="k">if</span> <span class="n">reachable</span><span class="p">:</span>
         <span class="n">sol</span> <span class="o">=</span> <span class="n">solved_map</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-        <span class="n">value_current</span> <span class="o">=</span> <span class="n">sol</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
-        <span class="n">plies_to_end</span> <span class="o">=</span> <span class="n">sol</span><span class="p">[</span><span class="s1">&#39;plies_to_end&#39;</span><span class="p">]</span>
-        <span class="n">optimal_moves</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">sol</span><span class="p">[</span><span class="s1">&#39;optimal_moves&#39;</span><span class="p">])</span>
-        <span class="n">qvals</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sol</span><span class="p">[</span><span class="s1">&#39;q_values&#39;</span><span class="p">])</span>
-        <span class="n">dtt_a</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sol</span><span class="p">[</span><span class="s1">&#39;dtt_action&#39;</span><span class="p">])</span>
-        <span class="n">policy_targets</span> <span class="o">=</span> <span class="n">build_policy_targets</span><span class="p">(</span><span class="n">normalized_board</span><span class="p">,</span> <span class="n">sol</span><span class="p">,</span> <span class="n">lambda_temp</span><span class="o">=</span><span class="n">lambda_temp</span><span class="p">,</span> <span class="n">q_temp</span><span class="o">=</span><span class="n">q_temp</span><span class="p">)</span>
-        <span class="n">pol_uniform</span> <span class="o">=</span> <span class="n">policy_targets</span><span class="p">[</span><span class="s1">&#39;policy_optimal_uniform&#39;</span><span class="p">]</span>
-        <span class="n">pol_soft</span> <span class="o">=</span> <span class="n">policy_targets</span><span class="p">[</span><span class="s1">&#39;policy_soft_dtt&#39;</span><span class="p">]</span>
-        <span class="n">pol_soft_q</span> <span class="o">=</span> <span class="n">policy_targets</span><span class="p">[</span><span class="s1">&#39;policy_soft_q&#39;</span><span class="p">]</span>
+        <span class="n">value_current</span> <span class="o">=</span> <span class="n">sol</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+        <span class="n">plies_to_end</span> <span class="o">=</span> <span class="n">sol</span><span class="p">[</span><span class="s2">&quot;plies_to_end&quot;</span><span class="p">]</span>
+        <span class="n">optimal_moves</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">sol</span><span class="p">[</span><span class="s2">&quot;optimal_moves&quot;</span><span class="p">])</span>
+        <span class="n">qvals</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sol</span><span class="p">[</span><span class="s2">&quot;q_values&quot;</span><span class="p">])</span>
+        <span class="n">dtt_a</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sol</span><span class="p">[</span><span class="s2">&quot;dtt_action&quot;</span><span class="p">])</span>
+        <span class="n">policy_targets</span> <span class="o">=</span> <span class="n">build_policy_targets</span><span class="p">(</span>
+            <span class="n">normalized_board</span><span class="p">,</span> <span class="n">sol</span><span class="p">,</span> <span class="n">lambda_temp</span><span class="o">=</span><span class="n">lambda_temp</span><span class="p">,</span> <span class="n">q_temp</span><span class="o">=</span><span class="n">q_temp</span>
+        <span class="p">)</span>
+        <span class="n">pol_uniform</span> <span class="o">=</span> <span class="n">policy_targets</span><span class="p">[</span><span class="s2">&quot;policy_optimal_uniform&quot;</span><span class="p">]</span>
+        <span class="n">pol_soft</span> <span class="o">=</span> <span class="n">policy_targets</span><span class="p">[</span><span class="s2">&quot;policy_soft_dtt&quot;</span><span class="p">]</span>
+        <span class="n">pol_soft_q</span> <span class="o">=</span> <span class="n">policy_targets</span><span class="p">[</span><span class="s2">&quot;policy_soft_q&quot;</span><span class="p">]</span>
         <span class="n">eps_policies</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">eps</span> <span class="ow">in</span> <span class="n">epsilons</span><span class="p">:</span>
             <span class="n">tag</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">eps</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -881,9 +947,9 @@ by construction because moves are on indices, not on piece IDs.</p>
         <span class="n">pol_entropy</span> <span class="o">=</span> <span class="o">-</span><span class="nb">sum</span><span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="mf">1e-10</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pol_uniform</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">pol_soft_dtt_entropy</span> <span class="o">=</span> <span class="o">-</span><span class="nb">sum</span><span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="mf">1e-10</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pol_soft</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">child_tiers</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;child_wins&#39;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">qvals</span> <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="o">+</span><span class="mi">1</span><span class="p">),</span>
-            <span class="s1">&#39;child_draws&#39;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">qvals</span> <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="mi">0</span><span class="p">),</span>
-            <span class="s1">&#39;child_losses&#39;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">qvals</span> <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="s2">&quot;child_wins&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">qvals</span> <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="o">+</span><span class="mi">1</span><span class="p">),</span>
+            <span class="s2">&quot;child_draws&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">qvals</span> <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="s2">&quot;child_losses&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">qvals</span> <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
         <span class="p">}</span>
         <span class="n">difficulty</span> <span class="o">=</span> <span class="n">difficulty_score</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
         <span class="c1"># optional: compute reply branching factor as the average number of</span>
@@ -893,31 +959,33 @@ by construction because moves are on indices, not on piece IDs.</p>
         <span class="n">legal_reply_counts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">mv</span> <span class="ow">in</span> <span class="n">optimal_moves</span><span class="p">:</span>
             <span class="n">child</span> <span class="o">=</span> <span class="n">board</span><span class="p">[:]</span>
-            <span class="n">child</span><span class="p">[</span><span class="n">mv</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">board</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">else</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">child</span><span class="p">[</span><span class="n">mv</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">board</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">else</span> <span class="mi">2</span>
             <span class="k">if</span> <span class="n">get_winner</span><span class="p">(</span><span class="n">child</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">is_draw</span><span class="p">(</span><span class="n">child</span><span class="p">):</span>
                 <span class="n">legal_reply_counts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">legal_reply_counts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">child</span> <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span>
-        <span class="n">reply_branching</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">legal_reply_counts</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">legal_reply_counts</span><span class="p">))</span> <span class="k">if</span> <span class="n">legal_reply_counts</span> <span class="k">else</span> <span class="mf">0.0</span>
+        <span class="n">reply_branching</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">float</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">legal_reply_counts</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">legal_reply_counts</span><span class="p">))</span> <span class="k">if</span> <span class="n">legal_reply_counts</span> <span class="k">else</span> <span class="mf">0.0</span>
+        <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">value_current</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">plies_to_end</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">optimal_moves</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="n">qvals</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="mi">9</span>
-        <span class="n">dtt_a</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="mi">9</span>
-        <span class="n">pol_uniform</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="mi">9</span>
-        <span class="n">pol_soft</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="mi">9</span>
-        <span class="n">pol_soft_q</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="mi">9</span>
+        <span class="n">qvals</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="mi">9</span>
+        <span class="n">dtt_a</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="mi">9</span>
+        <span class="n">pol_uniform</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="mi">9</span>
+        <span class="n">pol_soft</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="mi">9</span>
+        <span class="n">pol_soft_q</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="mi">9</span>
         <span class="n">eps_policies</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">pol_entropy</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">pol_soft_dtt_entropy</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">child_tiers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;child_wins&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;child_draws&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;child_losses&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="n">child_tiers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;child_wins&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;child_draws&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;child_losses&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
         <span class="n">difficulty</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="n">reply_branching</span> <span class="o">=</span> <span class="mf">0.0</span>
 
     <span class="n">sym</span> <span class="o">=</span> <span class="n">symmetry_info</span><span class="p">(</span><span class="n">board</span><span class="p">)</span>
     <span class="n">legal</span> <span class="o">=</span> <span class="p">[</span><span class="n">normalized_board</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">)]</span>
-    <span class="n">best_mask</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span> <span class="ow">in</span> <span class="n">optimal_moves</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">)]</span> <span class="k">if</span> <span class="n">reachable</span> <span class="k">else</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span><span class="o">*</span><span class="mi">9</span>
+    <span class="n">best_mask</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span> <span class="ow">in</span> <span class="n">optimal_moves</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">)]</span> <span class="k">if</span> <span class="n">reachable</span> <span class="k">else</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">*</span> <span class="mi">9</span>
     <span class="n">cell_pot</span> <span class="o">=</span> <span class="n">calculate_cell_line_potentials</span><span class="p">(</span><span class="n">normalized_board</span><span class="p">)</span>
 
     <span class="c1"># Extended positional/strategic features (deterministic and cheap)</span>
@@ -934,89 +1002,89 @@ by construction because moves are on indices, not on piece IDs.</p>
     <span class="n">o_two_open</span> <span class="o">=</span> <span class="n">count_two_in_row_open</span><span class="p">(</span><span class="n">normalized_board</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
     <span class="n">features</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;board_state&#39;</span><span class="p">:</span> <span class="n">key</span><span class="p">,</span>
-        <span class="s1">&#39;normalized_board_state&#39;</span><span class="p">:</span> <span class="n">norm_key</span><span class="p">,</span>
-    <span class="s1">&#39;swapped_color&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">normalize_to_move</span> <span class="ow">and</span> <span class="n">to_move</span> <span class="o">==</span> <span class="mi">2</span><span class="p">),</span>
-        <span class="s1">&#39;x_count&#39;</span><span class="p">:</span> <span class="n">x_count</span><span class="p">,</span>
-        <span class="s1">&#39;o_count&#39;</span><span class="p">:</span> <span class="n">o_count</span><span class="p">,</span>
-        <span class="s1">&#39;empty_count&#39;</span><span class="p">:</span> <span class="n">normalized_board</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
-        <span class="s1">&#39;move_number&#39;</span><span class="p">:</span> <span class="n">x_count</span> <span class="o">+</span> <span class="n">o_count</span><span class="p">,</span>
-        <span class="s1">&#39;current_player&#39;</span><span class="p">:</span> <span class="n">current_player</span><span class="p">,</span>
-        <span class="s1">&#39;is_terminal&#39;</span><span class="p">:</span> <span class="n">winner_raw</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">is_draw</span><span class="p">(</span><span class="n">board</span><span class="p">),</span>
-        <span class="s1">&#39;winner&#39;</span><span class="p">:</span> <span class="n">winner_raw</span><span class="p">,</span>
-        <span class="s1">&#39;winner_normalized&#39;</span><span class="p">:</span> <span class="n">winner_norm</span><span class="p">,</span>
-        <span class="s1">&#39;is_draw&#39;</span><span class="p">:</span> <span class="n">is_draw</span><span class="p">(</span><span class="n">board</span><span class="p">),</span>
-        <span class="s1">&#39;is_valid&#39;</span><span class="p">:</span> <span class="n">is_valid_state</span><span class="p">(</span><span class="n">board</span><span class="p">),</span>
-        <span class="s1">&#39;reachable_from_start&#39;</span><span class="p">:</span> <span class="n">reachable</span><span class="p">,</span>
-        <span class="s1">&#39;canonical_form&#39;</span><span class="p">:</span> <span class="n">sym</span><span class="p">[</span><span class="s1">&#39;canonical_form&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;canonical_op&#39;</span><span class="p">:</span> <span class="n">sym</span><span class="p">[</span><span class="s1">&#39;canonical_op&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;orbit_size&#39;</span><span class="p">:</span> <span class="n">sym</span><span class="p">[</span><span class="s1">&#39;orbit_size&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;horizontal_symmetric&#39;</span><span class="p">:</span> <span class="n">sym</span><span class="p">[</span><span class="s1">&#39;horizontal_symmetric&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;vertical_symmetric&#39;</span><span class="p">:</span> <span class="n">sym</span><span class="p">[</span><span class="s1">&#39;vertical_symmetric&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;diagonal_symmetric&#39;</span><span class="p">:</span> <span class="n">sym</span><span class="p">[</span><span class="s1">&#39;diagonal_symmetric&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;rotational_symmetric&#39;</span><span class="p">:</span> <span class="n">sym</span><span class="p">[</span><span class="s1">&#39;rotational_symmetric&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;any_symmetric&#39;</span><span class="p">:</span> <span class="n">sym</span><span class="p">[</span><span class="s1">&#39;any_symmetric&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;orbit_index&#39;</span><span class="p">:</span> <span class="n">sym</span><span class="p">[</span><span class="s1">&#39;orbit_index&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;value_current&#39;</span><span class="p">:</span> <span class="n">value_current</span><span class="p">,</span>
-        <span class="s1">&#39;plies_to_end&#39;</span><span class="p">:</span> <span class="n">plies_to_end</span><span class="p">,</span>
-        <span class="s1">&#39;optimal_moves_count&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">optimal_moves</span><span class="p">),</span>
-        <span class="s1">&#39;optimal_policy_entropy&#39;</span><span class="p">:</span> <span class="n">pol_entropy</span><span class="p">,</span>
-        <span class="s1">&#39;policy_soft_dtt_entropy&#39;</span><span class="p">:</span> <span class="n">pol_soft_dtt_entropy</span><span class="p">,</span>
-        <span class="s1">&#39;policy_soft_q_entropy&#39;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">&quot;board_state&quot;</span><span class="p">:</span> <span class="n">key</span><span class="p">,</span>
+        <span class="s2">&quot;normalized_board_state&quot;</span><span class="p">:</span> <span class="n">norm_key</span><span class="p">,</span>
+        <span class="s2">&quot;swapped_color&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">normalize_to_move</span> <span class="ow">and</span> <span class="n">to_move</span> <span class="o">==</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="s2">&quot;x_count&quot;</span><span class="p">:</span> <span class="n">x_count</span><span class="p">,</span>
+        <span class="s2">&quot;o_count&quot;</span><span class="p">:</span> <span class="n">o_count</span><span class="p">,</span>
+        <span class="s2">&quot;empty_count&quot;</span><span class="p">:</span> <span class="n">normalized_board</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+        <span class="s2">&quot;move_number&quot;</span><span class="p">:</span> <span class="n">x_count</span> <span class="o">+</span> <span class="n">o_count</span><span class="p">,</span>
+        <span class="s2">&quot;current_player&quot;</span><span class="p">:</span> <span class="n">current_player</span><span class="p">,</span>
+        <span class="s2">&quot;is_terminal&quot;</span><span class="p">:</span> <span class="n">winner_raw</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">is_draw</span><span class="p">(</span><span class="n">board</span><span class="p">),</span>
+        <span class="s2">&quot;winner&quot;</span><span class="p">:</span> <span class="n">winner_raw</span><span class="p">,</span>
+        <span class="s2">&quot;winner_normalized&quot;</span><span class="p">:</span> <span class="n">winner_norm</span><span class="p">,</span>
+        <span class="s2">&quot;is_draw&quot;</span><span class="p">:</span> <span class="n">is_draw</span><span class="p">(</span><span class="n">board</span><span class="p">),</span>
+        <span class="s2">&quot;is_valid&quot;</span><span class="p">:</span> <span class="n">is_valid_state</span><span class="p">(</span><span class="n">board</span><span class="p">),</span>
+        <span class="s2">&quot;reachable_from_start&quot;</span><span class="p">:</span> <span class="n">reachable</span><span class="p">,</span>
+        <span class="s2">&quot;canonical_form&quot;</span><span class="p">:</span> <span class="n">sym</span><span class="p">[</span><span class="s2">&quot;canonical_form&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;canonical_op&quot;</span><span class="p">:</span> <span class="n">sym</span><span class="p">[</span><span class="s2">&quot;canonical_op&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;orbit_size&quot;</span><span class="p">:</span> <span class="n">sym</span><span class="p">[</span><span class="s2">&quot;orbit_size&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;horizontal_symmetric&quot;</span><span class="p">:</span> <span class="n">sym</span><span class="p">[</span><span class="s2">&quot;horizontal_symmetric&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;vertical_symmetric&quot;</span><span class="p">:</span> <span class="n">sym</span><span class="p">[</span><span class="s2">&quot;vertical_symmetric&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;diagonal_symmetric&quot;</span><span class="p">:</span> <span class="n">sym</span><span class="p">[</span><span class="s2">&quot;diagonal_symmetric&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;rotational_symmetric&quot;</span><span class="p">:</span> <span class="n">sym</span><span class="p">[</span><span class="s2">&quot;rotational_symmetric&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;any_symmetric&quot;</span><span class="p">:</span> <span class="n">sym</span><span class="p">[</span><span class="s2">&quot;any_symmetric&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;orbit_index&quot;</span><span class="p">:</span> <span class="n">sym</span><span class="p">[</span><span class="s2">&quot;orbit_index&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;value_current&quot;</span><span class="p">:</span> <span class="n">value_current</span><span class="p">,</span>
+        <span class="s2">&quot;plies_to_end&quot;</span><span class="p">:</span> <span class="n">plies_to_end</span><span class="p">,</span>
+        <span class="s2">&quot;optimal_moves_count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">optimal_moves</span><span class="p">),</span>
+        <span class="s2">&quot;optimal_policy_entropy&quot;</span><span class="p">:</span> <span class="n">pol_entropy</span><span class="p">,</span>
+        <span class="s2">&quot;policy_soft_dtt_entropy&quot;</span><span class="p">:</span> <span class="n">pol_soft_dtt_entropy</span><span class="p">,</span>
+        <span class="s2">&quot;policy_soft_q_entropy&quot;</span><span class="p">:</span> <span class="p">(</span>
             <span class="o">-</span><span class="nb">sum</span><span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="mf">1e-10</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pol_soft_q</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="n">reachable</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="p">),</span>
-    <span class="c1"># Scalar difficulty per state; 0.0 when not reachable</span>
-    <span class="s1">&#39;difficulty_score&#39;</span><span class="p">:</span> <span class="n">difficulty</span><span class="p">,</span>
-        <span class="s1">&#39;reply_branching_factor&#39;</span><span class="p">:</span> <span class="n">reply_branching</span><span class="p">,</span>
+        <span class="c1"># Scalar difficulty per state; 0.0 when not reachable</span>
+        <span class="s2">&quot;difficulty_score&quot;</span><span class="p">:</span> <span class="n">difficulty</span><span class="p">,</span>
+        <span class="s2">&quot;reply_branching_factor&quot;</span><span class="p">:</span> <span class="n">reply_branching</span><span class="p">,</span>
         <span class="o">**</span><span class="n">child_tiers</span><span class="p">,</span>
-    <span class="c1"># control metrics (symmetric)</span>
-    <span class="o">**</span><span class="n">control</span><span class="p">,</span>
-    <span class="c1"># player-relative threats/connectivity/patterns</span>
-    <span class="s1">&#39;x_row_threats&#39;</span><span class="p">:</span> <span class="n">x_threats</span><span class="p">[</span><span class="s1">&#39;row_threats&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;x_col_threats&#39;</span><span class="p">:</span> <span class="n">x_threats</span><span class="p">[</span><span class="s1">&#39;col_threats&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;x_diag_threats&#39;</span><span class="p">:</span> <span class="n">x_threats</span><span class="p">[</span><span class="s1">&#39;diag_threats&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;x_total_threats&#39;</span><span class="p">:</span> <span class="n">x_threats</span><span class="p">[</span><span class="s1">&#39;total_threats&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;o_row_threats&#39;</span><span class="p">:</span> <span class="n">o_threats</span><span class="p">[</span><span class="s1">&#39;row_threats&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;o_col_threats&#39;</span><span class="p">:</span> <span class="n">o_threats</span><span class="p">[</span><span class="s1">&#39;col_threats&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;o_diag_threats&#39;</span><span class="p">:</span> <span class="n">o_threats</span><span class="p">[</span><span class="s1">&#39;diag_threats&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;o_total_threats&#39;</span><span class="p">:</span> <span class="n">o_threats</span><span class="p">[</span><span class="s1">&#39;total_threats&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;x_connected_pairs&#39;</span><span class="p">:</span> <span class="n">x_conn</span><span class="p">[</span><span class="s1">&#39;connected_pairs&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;x_total_connections&#39;</span><span class="p">:</span> <span class="n">x_conn</span><span class="p">[</span><span class="s1">&#39;total_connections&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;x_isolated_pieces&#39;</span><span class="p">:</span> <span class="n">x_conn</span><span class="p">[</span><span class="s1">&#39;isolated_pieces&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;x_cluster_count&#39;</span><span class="p">:</span> <span class="n">x_conn</span><span class="p">[</span><span class="s1">&#39;cluster_count&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;x_largest_cluster&#39;</span><span class="p">:</span> <span class="n">x_conn</span><span class="p">[</span><span class="s1">&#39;largest_cluster&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;o_connected_pairs&#39;</span><span class="p">:</span> <span class="n">o_conn</span><span class="p">[</span><span class="s1">&#39;connected_pairs&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;o_total_connections&#39;</span><span class="p">:</span> <span class="n">o_conn</span><span class="p">[</span><span class="s1">&#39;total_connections&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;o_isolated_pieces&#39;</span><span class="p">:</span> <span class="n">o_conn</span><span class="p">[</span><span class="s1">&#39;isolated_pieces&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;o_cluster_count&#39;</span><span class="p">:</span> <span class="n">o_conn</span><span class="p">[</span><span class="s1">&#39;cluster_count&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;o_largest_cluster&#39;</span><span class="p">:</span> <span class="n">o_conn</span><span class="p">[</span><span class="s1">&#39;largest_cluster&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;x_open_lines&#39;</span><span class="p">:</span> <span class="n">x_patterns</span><span class="p">[</span><span class="s1">&#39;open_lines&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;x_semi_open_lines&#39;</span><span class="p">:</span> <span class="n">x_patterns</span><span class="p">[</span><span class="s1">&#39;semi_open_lines&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;x_blocked_lines&#39;</span><span class="p">:</span> <span class="n">x_patterns</span><span class="p">[</span><span class="s1">&#39;blocked_lines&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;x_potential_lines&#39;</span><span class="p">:</span> <span class="n">x_patterns</span><span class="p">[</span><span class="s1">&#39;potential_lines&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;o_open_lines&#39;</span><span class="p">:</span> <span class="n">o_patterns</span><span class="p">[</span><span class="s1">&#39;open_lines&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;o_semi_open_lines&#39;</span><span class="p">:</span> <span class="n">o_patterns</span><span class="p">[</span><span class="s1">&#39;semi_open_lines&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;o_blocked_lines&#39;</span><span class="p">:</span> <span class="n">o_patterns</span><span class="p">[</span><span class="s1">&#39;blocked_lines&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;o_potential_lines&#39;</span><span class="p">:</span> <span class="n">o_patterns</span><span class="p">[</span><span class="s1">&#39;potential_lines&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;x_two_in_row_open&#39;</span><span class="p">:</span> <span class="n">x_two_open</span><span class="p">,</span>
-    <span class="s1">&#39;o_two_in_row_open&#39;</span><span class="p">:</span> <span class="n">o_two_open</span><span class="p">,</span>
-    <span class="s1">&#39;game_phase&#39;</span><span class="p">:</span> <span class="n">game_phase</span><span class="p">,</span>
+        <span class="c1"># control metrics (symmetric)</span>
+        <span class="o">**</span><span class="n">control</span><span class="p">,</span>
+        <span class="c1"># player-relative threats/connectivity/patterns</span>
+        <span class="s2">&quot;x_row_threats&quot;</span><span class="p">:</span> <span class="n">x_threats</span><span class="p">[</span><span class="s2">&quot;row_threats&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;x_col_threats&quot;</span><span class="p">:</span> <span class="n">x_threats</span><span class="p">[</span><span class="s2">&quot;col_threats&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;x_diag_threats&quot;</span><span class="p">:</span> <span class="n">x_threats</span><span class="p">[</span><span class="s2">&quot;diag_threats&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;x_total_threats&quot;</span><span class="p">:</span> <span class="n">x_threats</span><span class="p">[</span><span class="s2">&quot;total_threats&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;o_row_threats&quot;</span><span class="p">:</span> <span class="n">o_threats</span><span class="p">[</span><span class="s2">&quot;row_threats&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;o_col_threats&quot;</span><span class="p">:</span> <span class="n">o_threats</span><span class="p">[</span><span class="s2">&quot;col_threats&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;o_diag_threats&quot;</span><span class="p">:</span> <span class="n">o_threats</span><span class="p">[</span><span class="s2">&quot;diag_threats&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;o_total_threats&quot;</span><span class="p">:</span> <span class="n">o_threats</span><span class="p">[</span><span class="s2">&quot;total_threats&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;x_connected_pairs&quot;</span><span class="p">:</span> <span class="n">x_conn</span><span class="p">[</span><span class="s2">&quot;connected_pairs&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;x_total_connections&quot;</span><span class="p">:</span> <span class="n">x_conn</span><span class="p">[</span><span class="s2">&quot;total_connections&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;x_isolated_pieces&quot;</span><span class="p">:</span> <span class="n">x_conn</span><span class="p">[</span><span class="s2">&quot;isolated_pieces&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;x_cluster_count&quot;</span><span class="p">:</span> <span class="n">x_conn</span><span class="p">[</span><span class="s2">&quot;cluster_count&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;x_largest_cluster&quot;</span><span class="p">:</span> <span class="n">x_conn</span><span class="p">[</span><span class="s2">&quot;largest_cluster&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;o_connected_pairs&quot;</span><span class="p">:</span> <span class="n">o_conn</span><span class="p">[</span><span class="s2">&quot;connected_pairs&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;o_total_connections&quot;</span><span class="p">:</span> <span class="n">o_conn</span><span class="p">[</span><span class="s2">&quot;total_connections&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;o_isolated_pieces&quot;</span><span class="p">:</span> <span class="n">o_conn</span><span class="p">[</span><span class="s2">&quot;isolated_pieces&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;o_cluster_count&quot;</span><span class="p">:</span> <span class="n">o_conn</span><span class="p">[</span><span class="s2">&quot;cluster_count&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;o_largest_cluster&quot;</span><span class="p">:</span> <span class="n">o_conn</span><span class="p">[</span><span class="s2">&quot;largest_cluster&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;x_open_lines&quot;</span><span class="p">:</span> <span class="n">x_patterns</span><span class="p">[</span><span class="s2">&quot;open_lines&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;x_semi_open_lines&quot;</span><span class="p">:</span> <span class="n">x_patterns</span><span class="p">[</span><span class="s2">&quot;semi_open_lines&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;x_blocked_lines&quot;</span><span class="p">:</span> <span class="n">x_patterns</span><span class="p">[</span><span class="s2">&quot;blocked_lines&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;x_potential_lines&quot;</span><span class="p">:</span> <span class="n">x_patterns</span><span class="p">[</span><span class="s2">&quot;potential_lines&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;o_open_lines&quot;</span><span class="p">:</span> <span class="n">o_patterns</span><span class="p">[</span><span class="s2">&quot;open_lines&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;o_semi_open_lines&quot;</span><span class="p">:</span> <span class="n">o_patterns</span><span class="p">[</span><span class="s2">&quot;semi_open_lines&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;o_blocked_lines&quot;</span><span class="p">:</span> <span class="n">o_patterns</span><span class="p">[</span><span class="s2">&quot;blocked_lines&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;o_potential_lines&quot;</span><span class="p">:</span> <span class="n">o_patterns</span><span class="p">[</span><span class="s2">&quot;potential_lines&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;x_two_in_row_open&quot;</span><span class="p">:</span> <span class="n">x_two_open</span><span class="p">,</span>
+        <span class="s2">&quot;o_two_in_row_open&quot;</span><span class="p">:</span> <span class="n">o_two_open</span><span class="p">,</span>
+        <span class="s2">&quot;game_phase&quot;</span><span class="p">:</span> <span class="n">game_phase</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">):</span>
-        <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;cell_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">normalized_board</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-        <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;legal_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">legal</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-        <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;best_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">best_mask</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-        <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;q_value_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">qvals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-        <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;dtt_action_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dtt_a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-        <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;canonical_action_map_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">apply_action_transform</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">sym</span><span class="p">[</span><span class="s1">&#39;canonical_op&#39;</span><span class="p">])</span>
-        <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;policy_uniform_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pol_uniform</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">reachable</span> <span class="k">else</span> <span class="kc">None</span>
-        <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;policy_soft_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pol_soft</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">reachable</span> <span class="k">else</span> <span class="kc">None</span>
-        <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;policy_soft_q_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pol_soft_q</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">reachable</span> <span class="k">else</span> <span class="kc">None</span>
-        <span class="k">for</span> <span class="n">tag</span><span class="p">,</span> <span class="n">pol</span> <span class="ow">in</span> <span class="p">(</span><span class="n">eps_policies</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">reachable</span> <span class="k">else</span> <span class="p">[]):</span>
-            <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;epsilon_policy_</span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pol</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-        <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;x_cell_open_lines_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cell_pot</span><span class="p">[</span><span class="s1">&#39;x_cell_open_lines&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
-        <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;o_cell_open_lines_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cell_pot</span><span class="p">[</span><span class="s1">&#39;o_cell_open_lines&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;cell_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">normalized_board</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;legal_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">legal</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;best_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">best_mask</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;q_value_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">qvals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;dtt_action_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dtt_a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;canonical_action_map_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">apply_action_transform</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">sym</span><span class="p">[</span><span class="s2">&quot;canonical_op&quot;</span><span class="p">])</span>
+        <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;policy_uniform_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pol_uniform</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">reachable</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;policy_soft_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pol_soft</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">reachable</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;policy_soft_q_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pol_soft_q</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">reachable</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">tag</span><span class="p">,</span> <span class="n">pol</span> <span class="ow">in</span> <span class="n">eps_policies</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">reachable</span> <span class="k">else</span> <span class="p">[]:</span>
+            <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;epsilon_policy_</span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pol</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;x_cell_open_lines_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cell_pot</span><span class="p">[</span><span class="s2">&quot;x_cell_open_lines&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">features</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;o_cell_open_lines_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cell_pot</span><span class="p">[</span><span class="s2">&quot;o_cell_open_lines&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="n">features</span>
 </code></pre></div></td></tr></table></div>
@@ -1040,8 +1108,7 @@ by construction because moves are on indices, not on piece IDs.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/tictactoe/solver.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">113</span>
-<span class="normal">114</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">114</span>
 <span class="normal">115</span>
 <span class="normal">116</span>
 <span class="normal">117</span>
@@ -1062,7 +1129,8 @@ by construction because moves are on indices, not on piece IDs.</p>
 <span class="normal">132</span>
 <span class="normal">133</span>
 <span class="normal">134</span>
-<span class="normal">135</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">solve_all_reachable</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal">135</span>
+<span class="normal">136</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">solve_all_reachable</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Enumerate and solve all states reachable from the empty board.&quot;&quot;&quot;</span>
     <span class="n">all_nodes</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">q</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
@@ -1083,7 +1151,7 @@ by construction because moves are on indices, not on piece IDs.</p>
     <span class="n">solved</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">all_nodes</span><span class="p">:</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">solve_state</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-        <span class="n">solved</span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">s</span><span class="p">))]</span> <span class="o">=</span> <span class="n">res</span>
+        <span class="n">solved</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">s</span><span class="p">))]</span> <span class="o">=</span> <span class="n">res</span>
     <span class="k">return</span> <span class="n">solved</span>
 </code></pre></div></td></tr></table></div>
             </details>

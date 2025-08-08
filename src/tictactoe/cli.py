@@ -42,7 +42,9 @@ def build_parser() -> argparse.ArgumentParser:
         "--out", type=Path, default=Path("data_raw"), help="Output directory (default: data_raw)"
     )
     p_export.add_argument(
-        "--canonical-only", action="store_true", help="Only export canonical states; skip augmentation"
+        "--canonical-only",
+        action="store_true",
+        help="Only export canonical states; skip augmentation",
     )
     aug = p_export.add_mutually_exclusive_group()
     aug.add_argument(
@@ -132,7 +134,12 @@ def _set_deterministic_env(seed: Optional[int]) -> None:
     if seed is not None:
         os.environ.setdefault("PYTHONHASHSEED", str(seed))
     # Avoid BLAS variability if present
-    for var in ("MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS", "NUMEXPR_NUM_THREADS", "OMP_NUM_THREADS"):
+    for var in (
+        "MKL_NUM_THREADS",
+        "OPENBLAS_NUM_THREADS",
+        "NUMEXPR_NUM_THREADS",
+        "OMP_NUM_THREADS",
+    ):
         os.environ.setdefault(var, "1")
     _set_global_seed(seed)
 
@@ -156,8 +163,10 @@ def _print_info() -> None:
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     ns = parser.parse_args(argv)
-    logging.basicConfig(level=logging.DEBUG if getattr(ns, "verbose", False) else logging.INFO,
-                        format="[%(levelname)s] %(message)s")
+    logging.basicConfig(
+        level=logging.DEBUG if getattr(ns, "verbose", False) else logging.INFO,
+        format="[%(levelname)s] %(message)s",
+    )
 
     # Early exits
     if getattr(ns, "version", False):
@@ -176,34 +185,40 @@ def main(argv: list[str] | None = None) -> int:
         _set_deterministic_env(getattr(ns, "seed", None))
 
     if ns.cmd == "datasets" and ns.subcmd == "export":
-        eps = [float(x) for x in ns.epsilons.split(',') if x.strip()]
+        eps = [float(x) for x in ns.epsilons.split(",") if x.strip()]
         for e in eps:
             if e < 0.0 or e > 1.0:
                 logging.error("Epsilon out of range [0,1]: %s", e)
                 return 2
         if ns.verbose:
             logging.info("parsed_epsilons=%s", eps)
-        with maybe_mlflow_run(ns.tracking == "mlflow", run_name="datasets_export", log_dir=ns.log_dir):
-            out = run_export(ExportArgs(
-                out=ns.out,
-                canonical_only=ns.canonical_only,
-                include_augmentation=ns.include_augmentation,
-                epsilons=eps,
-                normalize_to_move=ns.normalize_to_move,
-                verbose=ns.verbose,
-                cli_argv=list(argv) if argv is not None else None,
-                format=ns.format,
-            ))
+        with maybe_mlflow_run(
+            ns.tracking == "mlflow", run_name="datasets_export", log_dir=ns.log_dir
+        ):
+            out = run_export(
+                ExportArgs(
+                    out=ns.out,
+                    canonical_only=ns.canonical_only,
+                    include_augmentation=ns.include_augmentation,
+                    epsilons=eps,
+                    normalize_to_move=ns.normalize_to_move,
+                    verbose=ns.verbose,
+                    cli_argv=list(argv) if argv is not None else None,
+                    format=ns.format,
+                )
+            )
         logging.info("Exported datasets to: %s", out)
         return 0
 
     if ns.cmd == "symmetry":
         import sys as _sys
+
         if ns.stdin:
             import csv as _csv
+
             r = _sys.stdin
             w = _csv.writer(_sys.stdout)
-            w.writerow(["board","canonical_form","orbit_size","canonical_op"]) 
+            w.writerow(["board", "canonical_form", "orbit_size", "canonical_op"])
             for line in r:
                 raw = line.strip()
                 if not raw:
@@ -214,7 +229,7 @@ def main(argv: list[str] | None = None) -> int:
                 if not is_valid_state(b):
                     continue
                 info = symmetry_info(b)
-                w.writerow([raw, info['canonical_form'], info['orbit_size'], info['canonical_op']])
+                w.writerow([raw, info["canonical_form"], info["orbit_size"], info["canonical_op"]])
             return 0
         else:
             raw = (ns.board or "").strip()
@@ -228,19 +243,21 @@ def main(argv: list[str] | None = None) -> int:
             info = symmetry_info(b)
             logging.info(
                 "canonical_form=%s orbit_size=%d op=%s",
-                info['canonical_form'],
-                info['orbit_size'],
-                info['canonical_op'],
+                info["canonical_form"],
+                info["orbit_size"],
+                info["canonical_op"],
             )
             return 0
 
     if ns.cmd == "solve":
         import sys as _sys
+
         if ns.stdin:
             import csv as _csv
+
             r = _sys.stdin
             w = _csv.writer(_sys.stdout)
-            w.writerow(["board","value","plies_to_end","optimal_moves"]) 
+            w.writerow(["board", "value", "plies_to_end", "optimal_moves"])
             for line in r:
                 raw = line.strip()
                 if not raw:
@@ -251,12 +268,14 @@ def main(argv: list[str] | None = None) -> int:
                 if not is_valid_state(b_list):
                     continue
                 res = solve_state(tuple(b_list))
-                w.writerow([
-                    raw,
-                    res['value'],
-                    res['plies_to_end'],
-                    ' '.join(map(str, res['optimal_moves'])),
-                ])
+                w.writerow(
+                    [
+                        raw,
+                        res["value"],
+                        res["plies_to_end"],
+                        " ".join(map(str, res["optimal_moves"])),
+                    ]
+                )
             return 0
         else:
             raw = (ns.board or "").strip()
@@ -271,9 +290,9 @@ def main(argv: list[str] | None = None) -> int:
             res = solve_state(b)
             logging.info(
                 "value=%s plies=%s optimal=%s",
-                res['value'],
-                res['plies_to_end'],
-                list(res['optimal_moves']),
+                res["value"],
+                res["plies_to_end"],
+                list(res["optimal_moves"]),
             )
             return 0
 

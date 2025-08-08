@@ -6,6 +6,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://romgenie.github.io/tic-tak-toe-2/ablations/</loc>
+         <lastmod>2025-08-08</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://romgenie.github.io/tic-tak-toe-2/benchmarks/</loc>
          <lastmod>2025-08-08</lastmod>
          <changefreq>daily</changefreq>
@@ -26,7 +31,17 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://romgenie.github.io/tic-tak-toe-2/experiments/</loc>
+         <lastmod>2025-08-08</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://romgenie.github.io/tic-tak-toe-2/repro/</loc>
+         <lastmod>2025-08-08</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://romgenie.github.io/tic-tak-toe-2/results/</loc>
          <lastmod>2025-08-08</lastmod>
          <changefreq>daily</changefreq>
     </url>

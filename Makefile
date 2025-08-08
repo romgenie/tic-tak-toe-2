@@ -32,12 +32,16 @@ reproduce-min:
 	@echo "Running minimal smoke reproduction (<1 min)"
 	PYTHONHASHSEED=0 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
 	$(PYTHON) scripts/run_experiments.py min --seed 0
+	$(PYTHON) scripts/aggregate_results.py
+	mkdocs build --strict
 
 .PHONY: reproduce
 reproduce:
 	@echo "Running full reproducible pipeline"
 	PYTHONHASHSEED=0 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
 	$(PYTHON) scripts/run_experiments.py full --seed 0
+	$(PYTHON) scripts/aggregate_results.py
+	mkdocs build --strict
 
 .PHONY: reproduce-small
 reproduce-small:

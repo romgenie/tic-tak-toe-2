@@ -5,6 +5,7 @@ Tie-break policy:
 - Among wins/draws, prefer shorter distance (plies) to termination.
 - Among losses, prefer longer distance (delay the loss).
 """
+
 from collections import deque
 from functools import lru_cache
 from typing import Dict, List, Optional
@@ -46,19 +47,19 @@ def solve_state(board_t: tuple) -> Dict:
     w = winner_t(board_t)
     if w != 0:
         return {
-            'value': -1,
-            'plies_to_end': 0,
-            'optimal_moves': tuple(),
-            'q_values': tuple([None] * 9),
-            'dtt_action': tuple([None] * 9),
+            "value": -1,
+            "plies_to_end": 0,
+            "optimal_moves": tuple(),
+            "q_values": tuple([None] * 9),
+            "dtt_action": tuple([None] * 9),
         }
     if is_draw_t(board_t):
         return {
-            'value': 0,
-            'plies_to_end': 0,
-            'optimal_moves': tuple(),
-            'q_values': tuple([None] * 9),
-            'dtt_action': tuple([None] * 9),
+            "value": 0,
+            "plies_to_end": 0,
+            "optimal_moves": tuple(),
+            "q_values": tuple([None] * 9),
+            "dtt_action": tuple([None] * 9),
         }
     p = current_player_t(board_t)
     moves = legal_moves(board_t)
@@ -70,9 +71,9 @@ def solve_state(board_t: tuple) -> Dict:
     for mv in moves:
         child = apply_move_t(board_t, mv, p)
         s_child = solve_state(child)
-        q = -s_child['value']
+        q = -s_child["value"]
         q_vals[mv] = q
-        dtt_action[mv] = 1 + s_child['plies_to_end']
+        dtt_action[mv] = 1 + s_child["plies_to_end"]
         if best_val is None:
             best_val = q
             best_dtt = dtt_action[mv]
@@ -102,11 +103,11 @@ def solve_state(board_t: tuple) -> Dict:
                 elif dtt_action[mv] == best_dtt:
                     best_moves.append(mv)
     return {
-        'value': best_val,
-        'plies_to_end': best_dtt,
-        'optimal_moves': tuple(sorted(best_moves)),
-        'q_values': tuple(q_vals),
-        'dtt_action': tuple(dtt_action),
+        "value": best_val,
+        "plies_to_end": best_dtt,
+        "optimal_moves": tuple(sorted(best_moves)),
+        "q_values": tuple(q_vals),
+        "dtt_action": tuple(dtt_action),
     }
 
 
@@ -131,5 +132,5 @@ def solve_all_reachable() -> dict:
     solved = {}
     for s in all_nodes:
         res = solve_state(s)
-        solved[''.join(map(str, s))] = res
+        solved["".join(map(str, s))] = res
     return solved

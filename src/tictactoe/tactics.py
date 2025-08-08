@@ -3,6 +3,7 @@ Tactics and simple motifs: immediate wins/blocks, forks, safety checks.
 Teaching notes:
 - Local motifs provide strong signals for learning before deep search.
 """
+
 from typing import List
 
 from .game_basics import get_winner

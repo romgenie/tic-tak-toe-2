@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://romgenie.github.io/tic-tak-toe-2/repro/">
+        <link rel="canonical" href="https://romgenie.github.io/tic-tak-toe-2/experiments/">
       
       
-        <link rel="prev" href="../data_card/">
+        <link rel="prev" href="../repro/">
       
       
-        <link rel="next" href="../experiments/">
+        <link rel="next" href="../results/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Reproducibility - Tic-Tac-Toe 2 Docs</title>
+        <title>Experiments - Tic-Tac-Toe 2 Docs</title>
       
     
     
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#reproducibility-guide" class="md-skip">
+        <a href="#experiments-reproducibility" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Reproducibility
+              Experiments
             
           </span>
         </div>
@@ -296,6 +296,26 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../repro/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reproducibility
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -308,148 +328,7 @@
         
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Reproducibility
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  <span class="md-ellipsis">
-    Reproducibility
-  </span>
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#environment" class="md-nav__link">
-    <span class="md-ellipsis">
-      Environment
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deterministic-flags" class="md-nav__link">
-    <span class="md-ellipsis">
-      Deterministic flags
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#one-shot-pipeline" class="md-nav__link">
-    <span class="md-ellipsis">
-      One-shot pipeline
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      Quick start
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#manual-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      Manual commands
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#notes-on-parquet" class="md-nav__link">
-    <span class="md-ellipsis">
-      Notes on Parquet
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#determinism" class="md-nav__link">
-    <span class="md-ellipsis">
-      Determinism
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reproduce-with-locks" class="md-nav__link">
-    <span class="md-ellipsis">
-      Reproduce with locks
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#provenance" class="md-nav__link">
-    <span class="md-ellipsis">
-      Provenance
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#archival-and-dois" class="md-nav__link">
-    <span class="md-ellipsis">
-      Archival and DOIs
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../experiments/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -458,6 +337,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -625,104 +505,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#environment" class="md-nav__link">
-    <span class="md-ellipsis">
-      Environment
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deterministic-flags" class="md-nav__link">
-    <span class="md-ellipsis">
-      Deterministic flags
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#one-shot-pipeline" class="md-nav__link">
-    <span class="md-ellipsis">
-      One-shot pipeline
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      Quick start
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#manual-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      Manual commands
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#notes-on-parquet" class="md-nav__link">
-    <span class="md-ellipsis">
-      Notes on Parquet
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#determinism" class="md-nav__link">
-    <span class="md-ellipsis">
-      Determinism
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reproduce-with-locks" class="md-nav__link">
-    <span class="md-ellipsis">
-      Reproduce with locks
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#provenance" class="md-nav__link">
-    <span class="md-ellipsis">
-      Provenance
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#archival-and-dois" class="md-nav__link">
-    <span class="md-ellipsis">
-      Archival and DOIs
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -739,85 +521,25 @@
   
 
 
-<h1 id="reproducibility-guide">Reproducibility Guide<a class="headerlink" href="#reproducibility-guide" title="Permanent link">&para;</a></h1>
-<p>This project is designed for deterministic, research-grade reproducibility.</p>
-<h2 id="environment">Environment<a class="headerlink" href="#environment" title="Permanent link">&para;</a></h2>
+<h1 id="experiments-reproducibility">Experiments &amp; Reproducibility<a class="headerlink" href="#experiments-reproducibility" title="Permanent link">&para;</a></h1>
+<p>Use Make targets:</p>
 <ul>
-<li>Python: 3.11 (CI also tests 3.10 and 3.12)</li>
-<li>NumPy: 1.26.x and 2.x supported</li>
-<li>Optional: pandas + pyarrow for Parquet</li>
+<li>Quick smoke (&lt; 1 minute): make reproduce-min</li>
+<li>Full pipeline (longer): make reproduce</li>
 </ul>
-<p>Install with lock (archival):</p>
-<pre><code class="language-bash">pip install -r requirements-lock.txt --require-hashes
-pip install -e .[dev]
-# Parquet (optional)
-pip install .[parquet]
-</code></pre>
-<p>Conda (using conda-lock):</p>
-<pre><code class="language-bash"># create from platform-specific lock (example for macOS arm64)
-conda create -n ttt --file conda-osx-arm64.lock.txt
-conda activate ttt
-pip install -e .
-</code></pre>
-<h2 id="deterministic-flags">Deterministic flags<a class="headerlink" href="#deterministic-flags" title="Permanent link">&para;</a></h2>
-<p>We set seeds and environment variables to avoid nondeterministic BLAS threading:</p>
+<p>Artifacts are written to results/YYYY-MM-DD_HHMM/ with:</p>
 <ul>
-<li>PYTHONHASHSEED</li>
-<li>MKL_NUM_THREADS</li>
-<li>OPENBLAS_NUM_THREADS</li>
-<li>OMP_NUM_THREADS</li>
+<li>MANIFEST.json and MANIFEST.md (config + provenance, lock file hashes)</li>
+<li>metrics.csv and metrics.json</li>
+<li>figures/ and logs/</li>
+<li>export_*/ with dataset CSV/Parquet and manifest.json</li>
 </ul>
-<p>The CLI exposes <code>--deterministic</code> and <code>--seed</code>.</p>
-<h2 id="one-shot-pipeline">One-shot pipeline<a class="headerlink" href="#one-shot-pipeline" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">make reproduce-all
-</code></pre>
-<p>This exports datasets (CSV + Parquet), runs multi-seed benchmarks with confidence intervals, and builds the docs.</p>
-<p>This project aims to be fully reproducible end-to-end: solver, datasets, and checksums.</p>
-<h2 id="quick-start">Quick start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
-<p>1) Create a Python 3.11+ environment and install the package in editable mode with dev extras.
-2) Export the small canonical dataset (CSV) and verify integrity.</p>
-<p>Example using the included Makefile target:</p>
-<pre><code class="language-bash">make reproduce-small
-</code></pre>
-<p>This runs the CLI export with CSV outputs and then executes <code>scripts/verify_export.py</code> to check checksums, row counts, and schema hashes.</p>
-<h2 id="manual-commands">Manual commands<a class="headerlink" href="#manual-commands" title="Permanent link">&para;</a></h2>
-<p>If you prefer to run the steps manually:</p>
-<pre><code class="language-bash">python -m tictactoe.cli datasets export --out data_clean/small --format csv --canonical-only
-python scripts/verify_export.py data_clean/small
-</code></pre>
-<p>Expected outputs (tree abbreviated):</p>
-<pre><code class="language-text">data_clean/small/
-├── manifest.json
-├── schema/
-│   ├── ttt_states.schema.json
-│   └── ttt_state_actions.schema.json
-├── ttt_states.csv
-└── ttt_state_actions.csv
-</code></pre>
-<p>The verify script will fail with a non-zero exit code on any mismatch.</p>
-<h2 id="notes-on-parquet">Notes on Parquet<a class="headerlink" href="#notes-on-parquet" title="Permanent link">&para;</a></h2>
-<p>Parquet export is optional and requires pandas + pyarrow. Install extras with:</p>
-<pre><code class="language-bash">pip install .[parquet]
-</code></pre>
-<p>Use <code>--format parquet</code> or <code>--format both</code> to write Parquet. If you request <code>--format parquet</code> without the dependencies installed, the CLI will raise a clear error. If you request <code>--format both</code> without the dependencies, the export will gracefully degrade to CSV-only and still write <code>manifest.json</code> with <code>parquet_written=false</code>.</p>
-<h2 id="determinism">Determinism<a class="headerlink" href="#determinism" title="Permanent link">&para;</a></h2>
-<p>CSV rows are written in a deterministic order (sorted by state, then action) to ensure byte-for-byte reproducibility. The manifest records SHA-256 checksums for every exported artifact.</p>
-<h2 id="reproduce-with-locks">Reproduce with locks<a class="headerlink" href="#reproduce-with-locks" title="Permanent link">&para;</a></h2>
-<p>Two paths are supported:</p>
+<p>Determinism:</p>
 <ul>
-<li>pip with cryptographic hashes: <code>pip install -r requirements-lock.txt --require-hashes</code></li>
-<li>conda with conda-lock: create env from <code>conda-&lt;platform&gt;.lock.txt</code> (generated and published in releases)</li>
+<li>Environment seeds set via PYTHONHASHSEED and BLAS threads forced to 1</li>
+<li>No RNG in solver or dataset generation; epsilon policies are analytic</li>
+<li>Re-running with identical config yields identical outputs (checksums in manifest)</li>
 </ul>
-<p>Set env vars for determinism before running:</p>
-<pre><code class="language-bash">export PYTHONHASHSEED=0
-export MKL_NUM_THREADS=1
-export OPENBLAS_NUM_THREADS=1
-export OMP_NUM_THREADS=1
-</code></pre>
-<h2 id="provenance">Provenance<a class="headerlink" href="#provenance" title="Permanent link">&para;</a></h2>
-<p>CI publishes artifacts (datasets, benchmark JSON, SBOM) tied to the commit SHA and lock file hashes. Each dataset export includes a <code>manifest.json</code> with commit, dirty flag, environment lock identifiers, and checksums.</p>
-<h2 id="archival-and-dois">Archival and DOIs<a class="headerlink" href="#archival-and-dois" title="Permanent link">&para;</a></h2>
-<p>We include a <code>.zenodo.json</code> descriptor in the repo. After cutting a GitHub release, enable Zenodo for this repository to mint a DOI and update the README badge to point to the release DOI. Attach the small reference export produced by <code>make reproduce-small</code> as a release asset to preserve artifacts and checksums alongside the code.</p>
 
 
 

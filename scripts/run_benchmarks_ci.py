@@ -41,8 +41,10 @@ def main() -> int:
 
     # Minimal manifest tying commit and environment lock identifiers
     env_lock_info = {}
+
     def file_sha256(p: Path) -> str:
         import hashlib
+
         h = hashlib.sha256()
         with p.open("rb") as f:
             for chunk in iter(lambda: f.read(8192), b""):

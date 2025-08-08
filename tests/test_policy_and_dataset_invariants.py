@@ -29,7 +29,9 @@ def test_policy_targets_sum_to_one_over_legal(solved_map):
     legal = [i for i, v in enumerate(b) if v == 0]
     for name in ["policy_optimal_uniform", "policy_soft_dtt", "policy_soft_q"]:
         v = pol[name]
-        assert all((i not in legal and (v[i] == 0.0 or v[i] is None)) or (i in legal) for i in range(9))
+        assert all(
+            (i not in legal and (v[i] == 0.0 or v[i] is None)) or (i in legal) for i in range(9)
+        )
         s = sum(v[i] for i in legal)
         assert math.isclose(s, 1.0, rel_tol=1e-9, abs_tol=1e-9)
 
@@ -42,7 +44,7 @@ def test_epsilon_policy_distribution_properties(solved_map, eps):
     s = sum(pol[i] for i in legal)
     assert math.isclose(s, 1.0, rel_tol=1e-9, abs_tol=1e-9)
     if eps == 0.0:
-        opts = set(sol['optimal_moves'])
+        opts = set(sol["optimal_moves"])
         vals = {pol[i] for i in legal if i in opts}
         assert len(vals) == 1  # uniform among optimal
         for i in legal:
@@ -59,23 +61,23 @@ def test_generate_state_action_dataset_terminal_states_emit_no_rows(solved_map):
     assert len(rows) > 0
     # pick random subset to check
     for r in rows[:100]:
-        b = [int(c) for c in r['board_state']]
+        b = [int(c) for c in r["board_state"]]
         assert get_winner(b) == 0 and not is_draw(b)
 
 
 def test_reward_done_flags_and_nonterminal_consistency(solved_map):
     rows = generate_state_action_dataset(solved_map, include_augmentation=False)
     for r in rows[:200]:
-        b = [int(c) for c in r['board_state']]
+        b = [int(c) for c in r["board_state"]]
         p = 1 if b.count(1) == b.count(2) else 2
-        i = r['action']
+        i = r["action"]
         child = b[:]
         child[i] = p
         w = get_winner(child)
         done = int(w != 0 or is_draw(child))
         reward = 1 if w == p else (-1 if w != 0 else 0)
-        assert r['done'] == done
-        assert r['reward_if_terminal'] == reward
+        assert r["done"] == done
+        assert r["reward_if_terminal"] == reward
         if done == 0:
             assert reward == 0
 
@@ -85,7 +87,7 @@ def test_symmetry_augmentation_action_remap_and_canonical(solved_map):
     # Index rows by board_state to find orbits
     by_board = defaultdict(list)
     for r in rows_aug:
-        by_board[r['board_state']].append(r)
+        by_board[r["board_state"]].append(r)
     # Check a handful of boards
     checked = 0
     for k, lst in by_board.items():
@@ -95,18 +97,18 @@ def test_symmetry_augmentation_action_remap_and_canonical(solved_map):
         # For each symmetry, there should exist transformed rows with action mapped
         for op in ALL_SYMS:
             tb = transform_board(b, op)
-            tkey = ''.join(map(str, tb))
+            tkey = "".join(map(str, tb))
             if tkey not in by_board:
                 continue
             # Pick a base row and ensure mapped action exists in target list
             base_row = lst[0]
-            a = base_row['action']
+            a = base_row["action"]
             a_t = apply_action_transform(a, op)
-            assert any(r['action'] == a_t for r in by_board[tkey])
+            assert any(r["action"] == a_t for r in by_board[tkey])
             # Canonical form matches transformed board's canonical
-            tcanon = symmetry_info(tb)['canonical_form']
+            tcanon = symmetry_info(tb)["canonical_form"]
             for r in by_board[tkey]:
-                assert r['canonical_form'] == tcanon
+                assert r["canonical_form"] == tcanon
         checked += 1
         if checked >= 5:
             break

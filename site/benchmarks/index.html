@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://romgenie.github.io/tic-tak-toe-2/benchmarks/">
       
       
-        <link rel="prev" href="../repro/">
+        <link rel="prev" href="../ablations/">
       
       
         <link rel="next" href="../cli/">
@@ -316,6 +316,66 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Experiments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../results/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Results
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ablations/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ablations
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -415,6 +475,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#ci-artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      CI artifacts
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -457,10 +526,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -471,8 +540,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             API Reference
           </label>
@@ -583,6 +652,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#ci-artifacts" class="md-nav__link">
+    <span class="md-ellipsis">
+      CI artifacts
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -609,7 +687,7 @@
 <li>OS: macOS 14.x or Ubuntu 22.04.</li>
 <li>Python: 3.11 or 3.12.</li>
 <li>NumPy: tested on 1.26.x and 2.x.</li>
-<li>Environment: <code>pip install .[dev]</code> (optionally add <code>.[parquet]</code> for Parquet runs).</li>
+<li>Environment: <code>pip install -r requirements-lock.txt --require-hashes &amp;&amp; pip install -e .</code> (for archival) or <code>pip install .[dev]</code> for local dev. Optionally add <code>.[parquet]</code> for Parquet runs.</li>
 </ul>
 <p>We use <code>pytest-benchmark</code> to time hot paths. Benchmarks are stable and avoid tiny timers via <code>--benchmark-min-time=0.1</code>.</p>
 <h3 id="deterministic-protocol">Deterministic protocol<a class="headerlink" href="#deterministic-protocol" title="Permanent link">&para;</a></h3>
@@ -623,7 +701,8 @@ export OMP_NUM_THREADS=1
 <pre><code class="language-bash">pytest -q -k benchmark --benchmark-min-time=0.1 --benchmark-warmup=on --benchmark-warmup-iterations=10
 </code></pre>
 <h2 id="reproduce-locally">Reproduce locally<a class="headerlink" href="#reproduce-locally" title="Permanent link">&para;</a></h2>
-<pre><code class="language-bash">pip install .[dev]
+<pre><code class="language-bash">pip install -r requirements-lock.txt --require-hashes
+pip install -e .[dev]
 # optional for parquet
 pip install .[parquet]
 
@@ -649,6 +728,15 @@ test_export_small_csv              180.000   260.000   200.000    15.00   198.00
 <li>All pipelines are pure Python with vectorized components where applicable.</li>
 <li>CSV order is deterministic, which can add minimal sorting cost but is essential for reproducibility.</li>
 </ul>
+<h2 id="ci-artifacts">CI artifacts<a class="headerlink" href="#ci-artifacts" title="Permanent link">&para;</a></h2>
+<p>Automated runs publish raw <code>pytest-benchmark</code> JSON and a small summary tied to:</p>
+<ul>
+<li>Git commit</li>
+<li>OS/arch and Python version</li>
+<li>NumPy version</li>
+<li>Environment lock identifiers (hash of requirements-lock.txt and/or conda-lock)</li>
+</ul>
+<p>See the CI job artifacts for the current branch. The JSON can be downloaded and compared using <code>pytest-benchmark compare</code>.</p>
 
 
 

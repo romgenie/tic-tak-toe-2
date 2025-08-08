@@ -422,6 +422,66 @@
   
   
     <li class="md-nav__item">
+      <a href="../experiments/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Experiments
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../results/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Results
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ablations/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ablations
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../benchmarks/" class="md-nav__link">
         
   
@@ -469,10 +529,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -483,8 +543,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             API Reference
           </label>
@@ -629,7 +689,7 @@
 <ul>
 <li>Name: ttt_states / ttt_state_actions</li>
 <li>Version: 1.1.0</li>
-<li>License: MIT for code; generated datasets are public domain (CC0) unless otherwise noted.</li>
+<li>License: Code is MIT; generated datasets are licensed under CC BY 4.0 unless otherwise noted.</li>
 </ul>
 <h2 id="provenance">Provenance<a class="headerlink" href="#provenance" title="Permanent link">&para;</a></h2>
 <p>Data are generated deterministically by the packaged perfect-play solver over all reachable Tic-Tac-Toe states. No external data sources are used.</p>
@@ -642,7 +702,7 @@
 <li>Export CSV and optionally Parquet with a manifest (checksums, schema hash, versions).</li>
 </ul>
 <h2 id="schema">Schema<a class="headerlink" href="#schema" title="Permanent link">&para;</a></h2>
-<p>See schema JSON files under each export directory (schema/*.schema.json).</p>
+<p>See schema JSON files under each export directory (schema/*.schema.json). Schemas include a <code>$schema</code> field and are versioned implicitly via the <code>dataset_version</code> field in the export manifest.</p>
 <h2 id="splits">Splits<a class="headerlink" href="#splits" title="Permanent link">&para;</a></h2>
 <p>No train/val/test splits are predefined; the dataset enumerates the full state space. Consumers may define splits deterministically by hashing the canonical form.</p>
 <h2 id="integrity">Integrity<a class="headerlink" href="#integrity" title="Permanent link">&para;</a></h2>

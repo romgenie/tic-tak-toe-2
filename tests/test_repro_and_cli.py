@@ -11,18 +11,24 @@ from tictactoe.datasets import ExportArgs, run_export
 def test_run_export_reproducible(tmp_path: Path):
     out1 = tmp_path / "exp1"
     out2 = tmp_path / "exp2"
-    args = ExportArgs(out=out1, canonical_only=True, include_augmentation=False, epsilons=[0.05, 0.1])
+    args = ExportArgs(
+        out=out1, canonical_only=True, include_augmentation=False, epsilons=[0.05, 0.1]
+    )
     run_export(args)
-    args2 = ExportArgs(out=out2, canonical_only=True, include_augmentation=False, epsilons=[0.05, 0.1])
+    args2 = ExportArgs(
+        out=out2, canonical_only=True, include_augmentation=False, epsilons=[0.05, 0.1]
+    )
     run_export(args2)
 
     m1 = json.loads((out1 / "manifest.json").read_text())
     m2 = json.loads((out2 / "manifest.json").read_text())
+
     # Compare fields except created_at
     def strip(m):
         s = dict(m)
         s.pop("created_at", None)
         return s
+
     s1, s2 = strip(m1), strip(m2)
     assert s1["row_counts"] == s2["row_counts"]
     assert s1["schema_hash"] == s2["schema_hash"]
@@ -53,7 +59,18 @@ def test_cli_symmetry_solve_and_export(tmp_path: Path):
     assert "value=" in s and "plies=" in s and "optimal=" in s
     # export
     outdir = tmp_path / "cli_out"
-    r = _run_cli(["datasets", "export", "--out", str(outdir), "--epsilons", "0.05,0.1", "--normalize-to-move"], cwd=tmp_path)
+    r = _run_cli(
+        [
+            "datasets",
+            "export",
+            "--out",
+            str(outdir),
+            "--epsilons",
+            "0.05,0.1",
+            "--normalize-to-move",
+        ],
+        cwd=tmp_path,
+    )
     assert r.returncode == 0
     assert (outdir / "ttt_states.csv").exists()
     assert (outdir / "ttt_state_actions.csv").exists()

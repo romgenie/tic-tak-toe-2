@@ -3,10 +3,12 @@ from typing import List
 try:
     from hypothesis import given  # type: ignore
     from hypothesis import strategies as st
+
     HAS_HYP = True
 except ModuleNotFoundError:  # pragma: no cover - test infra
     HAS_HYP = False
     import pytest as _pytest  # type: ignore
+
     _pytest.skip("Hypothesis not installed", allow_module_level=True)
 
 from tictactoe.game_basics import get_winner, is_valid_state
@@ -22,13 +24,24 @@ def test_is_valid_state_invariants_random(board: List[int]):
     # invalid counts must be False
     if not (x == o or x == o + 1):
         assert valid is False
+
     # double winner is invalid
     def count_wins(p: int) -> int:
         wins = 0
-        for pat in ([0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]):
+        for pat in (
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6],
+        ):
             if all(board[i] == p for i in pat):
                 wins += 1
         return wins
+
     if count_wins(1) > 0 and count_wins(2) > 0:
         assert valid is False
     # if there is a winner, piece counts align with move order
@@ -52,7 +65,7 @@ def test_apply_action_transform_bijective(idx: int, op: str):
 def test_rot90_four_times_identity(board: List[int]):
     b = board
     for _ in range(4):
-        b = transform_board(b, 'rot90')
+        b = transform_board(b, "rot90")
     assert b == board
 
 

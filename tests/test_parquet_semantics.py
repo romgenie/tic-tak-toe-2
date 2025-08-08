@@ -20,13 +20,15 @@ def test_format_both_graceful_without_parquet_deps(tmp_path: Path, monkeypatch: 
     monkeypatch.setattr(importlib.util, "find_spec", fake_find_spec)
 
     out = tmp_path / "exp_both"
-    res = run_export(ExportArgs(
-        out=out,
-        canonical_only=True,
-        include_augmentation=False,
-        epsilons=[0.1],
-        format="both",
-    ))
+    res = run_export(
+        ExportArgs(
+            out=out,
+            canonical_only=True,
+            include_augmentation=False,
+            epsilons=[0.1],
+            format="both",
+        )
+    )
 
     # CSVs exist, manifest exists
     assert (res / "ttt_states.csv").exists()
@@ -52,13 +54,15 @@ def test_format_parquet_raises_without_deps(tmp_path: Path, monkeypatch: pytest.
 
     out = tmp_path / "exp_parquet"
     with pytest.raises(RuntimeError):
-        run_export(ExportArgs(
-            out=out,
-            canonical_only=True,
-            include_augmentation=False,
-            epsilons=[0.1],
-            format="parquet",
-        ))
+        run_export(
+            ExportArgs(
+                out=out,
+                canonical_only=True,
+                include_augmentation=False,
+                epsilons=[0.1],
+                format="parquet",
+            )
+        )
 
     # No partial outputs should exist
     assert not out.exists() or not any(out.iterdir())

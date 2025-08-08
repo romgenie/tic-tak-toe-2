@@ -4,6 +4,7 @@ Experiment tracking helpers (optional MLflow backend).
 This module is lightweight and only imports MLflow when requested
 to avoid adding a hard dependency.
 """
+
 from __future__ import annotations
 
 from contextlib import contextmanager
@@ -12,7 +13,9 @@ from typing import Dict, Iterator, Optional
 
 
 @contextmanager
-def maybe_mlflow_run(enabled: bool, run_name: str, log_dir: Optional[Path] = None) -> Iterator[None]:
+def maybe_mlflow_run(
+    enabled: bool, run_name: str, log_dir: Optional[Path] = None
+) -> Iterator[None]:
     if not enabled:
         yield None
         return

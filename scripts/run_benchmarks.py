@@ -43,7 +43,11 @@ def main() -> int:
             solve_times.append(t1 - t0)
             outdir = Path("data_raw") / f"bench_seed_{s:03d}"
             t2 = time.perf_counter()
-            run_export(ExportArgs(out=outdir, canonical_only=True, include_augmentation=False, epsilons=[0.1]))
+            run_export(
+                ExportArgs(
+                    out=outdir, canonical_only=True, include_augmentation=False, epsilons=[0.1]
+                )
+            )
             t3 = time.perf_counter()
             export_times.append(t3 - t2)
             log_artifact(outdir / "manifest.json", artifact_path=f"seed_{s:03d}")

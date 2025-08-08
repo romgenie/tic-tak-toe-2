@@ -4,3 +4,4 @@ data_raw/
 *.pyc
 data_clean/
 plans/
+results/

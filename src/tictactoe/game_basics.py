@@ -5,17 +5,23 @@ Teaching notes:
 - A "ply" is a half-move (one player's turn).
 - Valid states have counts either equal (O to move) or X has one more (X just moved).
 """
+
 from typing import List, Tuple
 
 WIN_PATTERNS = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8],
-    [0, 3, 6], [1, 4, 7], [2, 5, 8],
-    [0, 4, 8], [2, 4, 6]
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
 ]
 
 
 def serialize_board(board: List[int]) -> str:
-    return ''.join(str(cell) for cell in board)
+    return "".join(str(cell) for cell in board)
 
 
 def deserialize_board(board_str: str) -> List[int]:
@@ -48,9 +54,11 @@ def is_valid_state(board: List[int]) -> bool:
         return False
     if w == 2 and x_count != o_count:
         return False
+
     # no double winners
     def count_wins(p: int) -> int:
         return sum(1 for pat in WIN_PATTERNS if all(board[i] == p for i in pat))
+
     if count_wins(1) > 0 and count_wins(2) > 0:
         return False
     return True

@@ -27,23 +27,23 @@ from typing import Any, Dict
 
 def sha256_file(path: Path) -> str:
     h = hashlib.sha256()
-    with path.open('rb') as f:
-        for chunk in iter(lambda: f.read(8192), b''):
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(8192), b""):
             h.update(chunk)
     return h.hexdigest()
 
 
 def schema_hash_from_csv_header(path: Path) -> str:
-    with path.open('r', newline='') as f:
+    with path.open("r", newline="") as f:
         reader = csv.reader(f)
         header = next(reader)
     keys = sorted(header)
-    payload = "\n".join(keys).encode('utf-8')
+    payload = "\n".join(keys).encode("utf-8")
     return hashlib.sha256(payload).hexdigest()
 
 
 def count_csv_rows(path: Path) -> int:
-    with path.open('r', newline='') as f:
+    with path.open("r", newline="") as f:
         reader = csv.reader(f)
         # subtract header
         return sum(1 for _ in reader) - 1
@@ -74,7 +74,9 @@ def main(argv: list[str] | None = None) -> int:
         print("ERROR: manifest.row_counts.states must be a positive integer", file=sys.stderr)
         ok = False
     if not isinstance(rc.get("state_actions", None), int) or rc.get("state_actions", 0) <= 0:
-        print("ERROR: manifest.row_counts.state_actions must be a positive integer", file=sys.stderr)
+        print(
+            "ERROR: manifest.row_counts.state_actions must be a positive integer", file=sys.stderr
+        )
         ok = False
     # Validate file existence and checksums
     for label, p in files.items():
@@ -88,7 +90,10 @@ def main(argv: list[str] | None = None) -> int:
         want = checksums.get(label)
         have = sha256_file(fp)
         if want and want != have:
-            print(f"ERROR: checksum mismatch for {label}: manifest={want} computed={have}", file=sys.stderr)
+            print(
+                f"ERROR: checksum mismatch for {label}: manifest={want} computed={have}",
+                file=sys.stderr,
+            )
             ok = False
 
     # Validate row counts if CSVs were written
@@ -97,12 +102,18 @@ def main(argv: list[str] | None = None) -> int:
     if states_csv:
         n = count_csv_rows(Path(states_csv))
         if rc.get("states") != n:
-            print(f"ERROR: states row count mismatch: manifest={rc.get('states')} actual={n}", file=sys.stderr)
+            print(
+                f"ERROR: states row count mismatch: manifest={rc.get('states')} actual={n}",
+                file=sys.stderr,
+            )
             ok = False
     if sa_csv:
         n = count_csv_rows(Path(sa_csv))
         if rc.get("state_actions") != n:
-            print(f"ERROR: state_actions row count mismatch: manifest={rc.get('state_actions')} actual={n}", file=sys.stderr)
+            print(
+                f"ERROR: state_actions row count mismatch: manifest={rc.get('state_actions')} actual={n}",
+                file=sys.stderr,
+            )
             ok = False
 
     # Validate schema hash using CSV headers as proxy for schema
@@ -111,13 +122,19 @@ def main(argv: list[str] | None = None) -> int:
         have = schema_hash_from_csv_header(Path(states_csv))
         want = sh.get("states")
         if want and want != have:
-            print(f"ERROR: schema_hash(states) mismatch: manifest={want} computed={have}", file=sys.stderr)
+            print(
+                f"ERROR: schema_hash(states) mismatch: manifest={want} computed={have}",
+                file=sys.stderr,
+            )
             ok = False
     if sa_csv:
         have = schema_hash_from_csv_header(Path(sa_csv))
         want = sh.get("state_actions")
         if want and want != have:
-            print(f"ERROR: schema_hash(state_actions) mismatch: manifest={want} computed={have}", file=sys.stderr)
+            print(
+                f"ERROR: schema_hash(state_actions) mismatch: manifest={want} computed={have}",
+                file=sys.stderr,
+            )
             ok = False
 
     # Ensure schemas exist and have basic shape
@@ -141,7 +158,10 @@ def main(argv: list[str] | None = None) -> int:
                     ok = False
                 props = sch.get("properties")
                 if not isinstance(props, dict) or not props:
-                    print(f"ERROR: {label} schema .properties must be a non-empty object", file=sys.stderr)
+                    print(
+                        f"ERROR: {label} schema .properties must be a non-empty object",
+                        file=sys.stderr,
+                    )
                     ok = False
         except Exception as e:
             print(f"ERROR: failed to parse schema JSON: {e}", file=sys.stderr)
