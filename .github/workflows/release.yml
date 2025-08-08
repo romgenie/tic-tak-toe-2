@@ -37,5 +37,6 @@ jobs:
             dist/*
             data_raw/release_small/**
             requirements-lock.txt
-            conda-lock.yml
+            environment.yml
+            conda-*.lock.*
             sbom.json

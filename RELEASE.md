@@ -13,8 +13,8 @@ This project aims for research-grade reproducibility. Follow these steps when cu
 3) Environment locks
 	- Pip (hash-locked): ensure `requirements-lock.txt` is up-to-date. Regenerate from the repo root using pip-tools:
 		- `pip-compile pyproject.toml --extra=dev --extra=parquet --extra=tracking --generate-hashes -o requirements-lock.txt`
-	- Conda (platform locks): use `conda-lock.yml` as the source and generate per-platform locks:
-		- `conda-lock -f conda-lock.yml -p linux-64 -p osx-arm64 -p win-64 -p osx-64`
+	- Conda (platform locks): use `environment.yml` as the source and generate per-platform locks:
+		- `conda-lock lock -f environment.yml -p linux-64 -p osx-arm64 -p win-64 -p osx-64`
 		- Commit the resulting `conda-*.lock.txt` files.
 
 4) SBOM and provenance

@@ -49,7 +49,7 @@ def main() -> int:
                 h.update(chunk)
         return h.hexdigest()
 
-    for name in ["requirements-lock.txt", "conda-lock.yml"]:
+    for name in ["requirements-lock.txt", "environment.yml"]:
         p = repo / name
         if p.exists():
             env_lock_info[name] = {

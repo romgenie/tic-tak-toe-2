@@ -227,9 +227,9 @@ def run_export(args: ExportArgs) -> Path:
         if repo_root is None:
             repo_root = here
         candidates = [
-            ("pip_requirements_lock", repo_root / "requirements-lock.txt"),
-            ("conda_lock_config", repo_root / "conda-lock.yml"),
-        ]
+                ("pip_requirements_lock", repo_root / "requirements-lock.txt"),
+                ("conda_env_spec", repo_root / "environment.yml"),
+            ]
         # Include platform-specific conda lock files if present
         for plat in ("linux-64", "osx-64", "osx-arm64", "win-64"):
             candidates.append((f"conda_lock_{plat}", repo_root / f"conda-{plat}.lock.yml"))
@@ -273,7 +273,7 @@ def run_export(args: ExportArgs) -> Path:
         },
         "files": files,
         "checksums": checksums,
-        "parquet_written": wrote_parquet,
+    "parquet_written": wrote_parquet,
     "environment_locks": env_locks,
     }
     (args.out / "manifest.json").write_text(json.dumps(manifest, indent=2))
