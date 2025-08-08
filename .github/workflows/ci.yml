@@ -354,6 +354,7 @@ jobs:
           name: site
           path: site
 
+  # GitHub Pages deployment (Pages enabled with GitHub Actions as source)
   deploy-docs:
     name: Deploy docs to GitHub Pages
     needs: docs
@@ -379,8 +380,6 @@ jobs:
           ls -la ./site | head -200
       - name: Setup Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
