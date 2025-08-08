@@ -759,9 +759,9 @@ mkdocstrings[python]==0.25.2 \
     # via
     #   mkdocstrings-python
     #   tictactoe (pyproject.toml)
-mkdocstrings-python==1.10.8 \
-    --hash=sha256:5856a59cbebbb8deb133224a540de1ff60bded25e54d8beacc375bb133d39016 \
-    --hash=sha256:bb12e76c8b071686617f824029cb1dfe0e9afe89f27fb3ad9a27f95f054dcd89
+mkdocstrings-python==1.16.12 \
+    --hash=sha256:22ded3a63b3d823d57457a70ff9860d5a4de9e8b1e482876fc9baabaf6f5f374 \
+    --hash=sha256:9b9eaa066e0024342d433e332a41095c4e429937024945fea511afe58f63175d
     # via mkdocstrings
 mlflow==2.22.1 \
     --hash=sha256:b7d6cb294112115cb0031a554629a21647c38ba88d0fd7455e0ddead02b4bb28 \
