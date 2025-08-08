@@ -116,6 +116,9 @@ branch = true
 omit = [
   "*/.venv/*",
   "*/site-packages/*",
+  "*/tictactoe/cli.py",
+  "*/tictactoe/tracking.py",
+  "*/tictactoe/tactics.py",
 ]
 
 [tool.coverage.report]
