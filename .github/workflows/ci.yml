@@ -357,6 +357,7 @@ jobs:
   deploy-docs:
     name: Deploy docs to GitHub Pages
     needs: docs
+    if: github.repository_owner == 'romgenie' && github.event_name == 'push' && github.ref == 'refs/heads/main'
     permissions:
       contents: read
       pages: write
@@ -378,6 +379,8 @@ jobs:
           ls -la ./site | head -200
       - name: Setup Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
