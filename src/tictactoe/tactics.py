@@ -4,7 +4,8 @@ Teaching notes:
 - Local motifs provide strong signals for learning before deep search.
 """
 from typing import List
-from .game_basics import get_winner, WIN_PATTERNS
+
+from .game_basics import get_winner
 
 
 def immediate_winning_moves(board: List[int], player: int) -> List[int]:

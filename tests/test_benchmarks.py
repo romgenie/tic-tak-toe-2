@@ -1,10 +1,11 @@
-import pytest
-from tictactoe.solver import solve_all_reachable
-from tictactoe.datasets import run_export, ExportArgs
 from pathlib import Path
 
+import pytest
+
+from tictactoe.datasets import ExportArgs, run_export
+from tictactoe.solver import solve_all_reachable
+
 try:
-    import pytest_benchmark  # type: ignore
     HAS_BENCH = True
 except Exception:
     HAS_BENCH = False

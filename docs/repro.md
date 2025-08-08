@@ -1,3 +1,39 @@
+# Reproducibility Guide
+
+This project is designed for deterministic, research-grade reproducibility.
+
+## Environment
+
+- Python: 3.11 (CI also tests 3.10 and 3.12)
+- NumPy: 1.26.x and 2.x supported
+- Optional: pandas + pyarrow for Parquet
+
+Install dev extras:
+
+```bash
+pip install .[dev]
+# Parquet (optional)
+pip install .[parquet]
+```
+
+## Deterministic flags
+
+We set seeds and environment variables to avoid nondeterministic BLAS threading:
+
+- PYTHONHASHSEED
+- MKL_NUM_THREADS
+- OPENBLAS_NUM_THREADS
+- OMP_NUM_THREADS
+
+The CLI exposes `--deterministic` and `--seed`.
+
+## One-shot pipeline
+
+```bash
+make reproduce-all
+```
+
+This exports datasets (CSV + Parquet), runs multi-seed benchmarks with confidence intervals, and builds the docs.
 # Reproducibility
 
 This project aims to be fully reproducible end-to-end: solver, datasets, and checksums.

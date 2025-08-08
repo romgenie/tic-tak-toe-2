@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from tictactoe.datasets import run_export, ExportArgs
+from tictactoe.datasets import ExportArgs, run_export
 
 
 def test_format_both_graceful_without_parquet_deps(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):

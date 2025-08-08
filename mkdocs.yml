@@ -5,6 +5,7 @@ nav:
   - Overview: index.md
   - Theory: theory.md
   - Datasets: datasets.md
+  - Data Card: data_card.md
   - Reproducibility: repro.md
   - Benchmarks: benchmarks.md
   - CLI Guide: cli.md

@@ -5,10 +5,11 @@ Tie-break policy:
 - Among wins/draws, prefer shorter distance (plies) to termination.
 - Among losses, prefer longer distance (delay the loss).
 """
+from collections import deque
 from functools import lru_cache
 from typing import Dict, List, Optional
-from collections import deque
-from .game_basics import get_winner, is_draw, serialize_board
+
+from .game_basics import get_winner, is_draw
 
 
 def legal_moves(board_t: tuple) -> List[int]:

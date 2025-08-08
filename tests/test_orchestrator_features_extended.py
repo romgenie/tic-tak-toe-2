@@ -1,12 +1,9 @@
-import json
-from pathlib import Path
-import sys
 
 import pytest
 
-from tictactoe.solver import solve_all_reachable
-from tictactoe.orchestrator import extract_board_features
 from tictactoe.game_basics import get_winner, is_draw
+from tictactoe.orchestrator import extract_board_features
+from tictactoe.solver import solve_all_reachable
 
 
 @pytest.fixture(scope="module")

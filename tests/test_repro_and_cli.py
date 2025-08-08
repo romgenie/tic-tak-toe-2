@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from tictactoe.datasets import run_export, ExportArgs
+from tictactoe.datasets import ExportArgs, run_export
 
 
 def test_run_export_reproducible(tmp_path: Path):

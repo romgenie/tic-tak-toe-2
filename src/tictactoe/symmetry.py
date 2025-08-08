@@ -5,8 +5,9 @@ Teaching notes:
 - We canonicalize a board by taking the lexicographically smallest image among all symmetries.
 - Actions (cell indices) transform with the board; we precompute index maps.
 """
-from typing import List, Dict
 from functools import lru_cache
+from typing import Dict, List
+
 from .game_basics import serialize_board
 
 ALL_SYMS = ['id', 'rot90', 'rot180', 'rot270', 'hflip', 'vflip', 'd1', 'd2']

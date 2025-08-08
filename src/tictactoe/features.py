@@ -2,6 +2,7 @@
 Positional features and control utilities for Tic-Tac-Toe.
 """
 from typing import Dict, List
+
 from .game_basics import WIN_PATTERNS
 
 WIN_PATTERNS_BY_TYPE = {

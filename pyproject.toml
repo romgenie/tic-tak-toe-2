@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "tictactoe"
-version = "1.1.0"
+version = "1.2.0"
 description = "Tic-tac-toe algorithms, datasets, and CLI"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -53,6 +53,9 @@ snapshot = [
   "pandas==2.1.4",
   "pyarrow==14.0.2",
 ]
+tracking = [
+  "mlflow<3",
+]
 
 [project.urls]
 Homepage = "https://github.com/romgenie/tic-tak-toe-2"
@@ -76,18 +79,46 @@ target-version = ["py311"]
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+exclude = [
+  "archive",
+  "site",
+  ".venv",
+  ".pytest_cache",
+  ".hypothesis",
+  "data_raw",
+  "data_clean",
+]
+
+[tool.ruff.lint]
 select = ["E", "F", "I"]
-ignore = []
+ignore = ["E501"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
+known_first_party = ["tictactoe"]
+skip = ["archive", "site", ".venv", ".pytest_cache", ".hypothesis", "data_raw", "data_clean"]
 
 [tool.mypy]
 python_version = "3.11"
-[tool.hatch.build]
-include = [
-  "src/tictactoe/py.typed",
-]
 strict = false
 warn_unused_ignores = true
 warn_redundant_casts = true
 warn_unused_configs = true
 disallow_untyped_defs = false
+no_implicit_optional = false
+check_untyped_defs = false
 ignore_missing_imports = true
+
+[tool.hatch.build]
+include = [
+  "src/tictactoe/py.typed",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/tictactoe"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "src/tictactoe",
+]

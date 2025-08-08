@@ -1,0 +1,4 @@
+# file: /Users/completetech/retro/tic-tak-toe-2/src/tictactoe/datasets.py
+# hypothesis_version: 6.137.1
+
+[0.1, 8192, ' with augmentation', '$schema', ',', '1.1.0', 'Solved %d states', '__version__', 'action', 'additionalProperties', 'args', 'board_state', 'boolean', 'both', 'canonical_form', 'canonical_only', 'checksums', 'cli_argv', 'created_at', 'csv', 'dataset_version', 'draw', 'epsilons', 'files', 'format', 'git_commit', 'git_is_dirty', 'include_augmentation', 'integer', 'manifest.json', 'normalize_to_move', 'null', 'number', 'numpy', 'o', 'object', 'orbit_size', 'packages', 'pandas', 'parquet', 'parquet_written', 'properties', 'pyarrow', 'python', 'python_version', 'rb', 'row_counts', 'rows_state_actions', 'rows_states', 'schema', 'schema_hash', 'state_actions', 'state_actions_csv', 'states', 'states_csv', 'states_parquet', 'string', 'terminal_split', 'ttt_states.csv', 'ttt_states.parquet', 'type', 'utf-8', 'w', 'x']

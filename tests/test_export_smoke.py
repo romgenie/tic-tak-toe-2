@@ -1,7 +1,7 @@
-from pathlib import Path
 import json
+from pathlib import Path
 
-from tictactoe.datasets import run_export, ExportArgs
+from tictactoe.datasets import ExportArgs, run_export
 
 
 def test_export_creates_csv_and_manifest(tmp_path: Path):

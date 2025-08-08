@@ -5,27 +5,35 @@ Perspective note: features are computed on the board as given (no X-to-move
 normalization). The "current_player" field is included to disambiguate.
 """
 from __future__ import annotations
-from typing import Dict, List, Optional, Any
+
+from typing import Any, Dict, List, Optional
+
 import numpy as np
 
-from .game_basics import (
-    serialize_board, deserialize_board, get_winner, is_draw,
-    get_piece_counts, is_valid_state,
-)
-from .symmetry import symmetry_info, apply_action_transform, transform_board, ALL_SYMS
 # Note: tactics utilities imported selectively elsewhere; none needed here
 from .features import (
     calculate_cell_line_potentials,
-    calculate_line_threats,
     calculate_connectivity,
     calculate_control_metrics,
-    calculate_pattern_strength,
     calculate_game_phase,
+    calculate_line_threats,
+    calculate_pattern_strength,
     count_two_in_row_open,
 )
-from .policy import (
-    build_policy_targets, epsilon_policy_distribution, difficulty_score,
+from .game_basics import (
+    deserialize_board,
+    get_piece_counts,
+    get_winner,
+    is_draw,
+    is_valid_state,
+    serialize_board,
 )
+from .policy import (
+    build_policy_targets,
+    difficulty_score,
+    epsilon_policy_distribution,
+)
+from .symmetry import ALL_SYMS, apply_action_transform, symmetry_info, transform_board
 
 
 def extract_board_features(

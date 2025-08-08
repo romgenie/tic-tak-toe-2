@@ -1,5 +1,5 @@
-from tictactoe.solver import solve_all_reachable
 from tictactoe.orchestrator import generate_state_action_dataset
+from tictactoe.solver import solve_all_reachable
 
 
 def test_augmentation_emits_more_rows_per_state():

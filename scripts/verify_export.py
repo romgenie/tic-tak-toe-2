@@ -20,8 +20,8 @@ import argparse
 import csv
 import hashlib
 import json
-from pathlib import Path
 import sys
+from pathlib import Path
 from typing import Any, Dict
 
 

@@ -15,8 +15,8 @@ import json
 from pathlib import Path
 from typing import Dict
 
-from tictactoe.solver import solve_all_reachable
 from tictactoe.game_basics import get_winner, is_draw
+from tictactoe.solver import solve_all_reachable
 
 
 def main() -> int:

@@ -1,5 +1,5 @@
 from tictactoe.solver import solve_state
-from tictactoe.symmetry import ALL_SYMS, transform_board, apply_action_transform
+from tictactoe.symmetry import ALL_SYMS, apply_action_transform, transform_board
 
 
 def test_value_and_optimal_moves_invariant_under_symmetry():

@@ -1,17 +1,16 @@
-from pathlib import Path
 import json
 import subprocess
 import sys
-import math
+from pathlib import Path
 
 import pytest
 
-from tictactoe.solver import solve_all_reachable
+from tictactoe.datasets import ExportArgs, run_export
 from tictactoe.game_basics import get_winner, is_draw
 from tictactoe.orchestrator import extract_board_features
-from tictactoe.policy import epsilon_policy_distribution
-from tictactoe.datasets import run_export, ExportArgs
 from tictactoe.paths import get_git_commit, get_git_is_dirty
+from tictactoe.policy import epsilon_policy_distribution
+from tictactoe.solver import solve_all_reachable
 
 
 @pytest.fixture(scope="module")

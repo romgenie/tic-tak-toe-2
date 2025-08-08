@@ -1,16 +1,16 @@
 from typing import List
 
-import pytest
 try:
-    from hypothesis import given, strategies as st  # type: ignore
+    from hypothesis import given  # type: ignore
+    from hypothesis import strategies as st
     HAS_HYP = True
 except ModuleNotFoundError:  # pragma: no cover - test infra
     HAS_HYP = False
     import pytest as _pytest  # type: ignore
     _pytest.skip("Hypothesis not installed", allow_module_level=True)
 
-from tictactoe.game_basics import is_valid_state, get_winner
-from tictactoe.symmetry import ALL_SYMS, transform_board, apply_action_transform
+from tictactoe.game_basics import get_winner, is_valid_state
+from tictactoe.symmetry import ALL_SYMS, apply_action_transform, transform_board
 
 
 @given(st.lists(st.integers(min_value=0, max_value=2), min_size=9, max_size=9))

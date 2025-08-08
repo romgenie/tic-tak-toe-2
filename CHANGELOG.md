@@ -26,3 +26,13 @@
 - Docs: Fix `docs/repro.md` commands to `python -m tictactoe.cli datasets export ...`.
 - Docs: Clarify Parquet instructions in README and `docs/datasets.md`; add dataset card details.
 - Docs: Expand `docs/benchmarks.md` with methodology and reproduction guidance.
+
+## 1.2.0 - 2025-08-08
+
+- Pre-commit: add ruff, black, isort, mypy, nbstripout, whitespace and EOF fixers. Add .editorconfig.
+- CLI: global `--seed`, `--deterministic`, `--version`, and `--info` flags.
+- Tracking: optional MLflow integration via `tictactoe.tracking`; new `scripts/run_benchmarks.py` with CI-friendly stats.
+- CI: matrix expanded to OS x Python (3.10–3.12), pip cache, coverage gate set to 90%.
+- Make: `reproduce-all` target regenerates datasets, runs benchmarks, and builds docs deterministically.
+- Docs: add `docs/data_card.md` and update nav; add `docs/repro.md` guide.
+- Packaging: bump version to 1.2.0; add `tracking` extra for `mlflow`.

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from tictactoe.paths import repo_root, data_raw, data_clean
+from tictactoe.paths import data_clean, data_raw, repo_root
 
 
 def test_repo_root_prefers_cwd_when_no_git_and_no_env(tmp_path: Path, monkeypatch):

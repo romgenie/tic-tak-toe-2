@@ -1,0 +1,4 @@
+# file: /Users/completetech/retro/tic-tak-toe-2/src/tictactoe/solver.py
+# hypothesis_version: 6.137.1
+
+['dtt_action', 'optimal_moves', 'plies_to_end', 'q_values', 'value']

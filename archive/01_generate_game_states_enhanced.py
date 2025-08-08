@@ -4,9 +4,8 @@ Thin shim: the original monolithic generator has been archived under `archive/`.
 This shim re-exports its public API so tests and existing imports keep working.
 For new workflows, prefer `src/10_cli.py export` or `ttt.datasets` with --use-orchestrator.
 """
-from pathlib import Path
 import importlib.util
-import sys as _sys
+from pathlib import Path
 
 _ARCHIVED = Path(__file__).resolve().parents[1] / 'archive' / '01_generate_game_states_enhanced.py'
 _SRC_COPY = Path(__file__).resolve()  # this file; try to load original if still present via archive

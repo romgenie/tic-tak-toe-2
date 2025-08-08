@@ -1,15 +1,13 @@
-from collections import defaultdict
-import json
-from pathlib import Path
 import math
+from collections import defaultdict
 
 import pytest
 
-from tictactoe.solver import solve_all_reachable
-from tictactoe.policy import build_policy_targets, epsilon_policy_distribution
-from tictactoe.orchestrator import generate_state_action_dataset
 from tictactoe.game_basics import get_winner, is_draw
-from tictactoe.symmetry import ALL_SYMS, transform_board, apply_action_transform, symmetry_info
+from tictactoe.orchestrator import generate_state_action_dataset
+from tictactoe.policy import build_policy_targets, epsilon_policy_distribution
+from tictactoe.solver import solve_all_reachable
+from tictactoe.symmetry import ALL_SYMS, apply_action_transform, symmetry_info, transform_board
 
 
 @pytest.fixture(scope="module")
@@ -94,7 +92,6 @@ def test_symmetry_augmentation_action_remap_and_canonical(solved_map):
         b = [int(c) for c in k]
         if get_winner(b) != 0 or is_draw(b):
             continue
-        info = symmetry_info(b)
         # For each symmetry, there should exist transformed rows with action mapped
         for op in ALL_SYMS:
             tb = transform_board(b, op)

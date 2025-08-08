@@ -5,21 +5,23 @@ This module builds state and state-action datasets by composing solver and
 feature orchestration utilities.
 """
 from __future__ import annotations
-from dataclasses import dataclass, field
-from pathlib import Path
-from typing import List, Dict, Any
+
 import csv
+import hashlib
 import importlib.util
 import json
-import hashlib
 import logging
-from datetime import datetime, timezone
 from collections import Counter
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Dict, List
 
+from .orchestrator import extract_board_features, generate_state_action_dataset
+from .tracking import log_artifact, log_params, maybe_mlflow_run
+from .paths import get_git_commit, get_git_is_dirty
 from .solver import solve_all_reachable
 from .symmetry import symmetry_info
-from .orchestrator import extract_board_features, generate_state_action_dataset
-from .paths import get_git_commit, get_git_is_dirty
 
 
 @dataclass
@@ -48,6 +50,9 @@ def run_export(args: ExportArgs) -> Path:
                         format="[%(levelname)s] %(message)s")
     args.out.mkdir(parents=True, exist_ok=True)
 
+    # Optional tracking context (no-op if mlflow not used)
+    # We treat presence of environment variables or external control outside of this
+    # module; here we only log params/artifacts when available.
     # Generate data with modular pipeline
     logging.info("Solving all reachable states…")
     solved = solve_all_reachable()
@@ -77,8 +82,12 @@ def run_export(args: ExportArgs) -> Path:
                 normalize_to_move=args.normalize_to_move,
             )
         )
-    logging.info("Building state-action rows%s…",
-                 " with augmentation" if args.include_augmentation and not args.canonical_only else "")
+    logging.info(
+        "Building state-action rows%s…",
+        " with augmentation"
+        if args.include_augmentation and not args.canonical_only
+        else "",
+    )
     rows_sa = generate_state_action_dataset(
         solved,
         include_augmentation=args.include_augmentation,
@@ -136,7 +145,9 @@ def run_export(args: ExportArgs) -> Path:
                 logging.info("Wrote Parquet files to %s", args.out)
                 wrote_parquet = True
             except Exception as e:
-                logging.warning("Failed to write Parquet files: %s: %s", type(e).__name__, e)
+                logging.warning(
+                    "Failed to write Parquet files: %s: %s", type(e).__name__, e
+                )
         else:
             msg = (
                 "Parquet dependencies not available (install pandas and pyarrow). "
@@ -147,7 +158,10 @@ def run_export(args: ExportArgs) -> Path:
                 raise RuntimeError(msg)
             else:
                 # Graceful degrade for 'both': keep CSVs already written, log warning, and continue
-                logging.warning("%s Proceeding with CSV only; manifest will record parquet_written=false.", msg)
+                logging.warning(
+                    "%s Proceeding with CSV only; manifest will record parquet_written=false.",
+                    msg,
+                )
                 wrote_parquet = False
 
     # Write manifest with metadata for reproducibility
@@ -229,6 +243,26 @@ def run_export(args: ExportArgs) -> Path:
     }
     (args.out / "manifest.json").write_text(json.dumps(manifest, indent=2))
     logging.info("Wrote manifest.json with metadata and schema hashes")
+    # Best-effort tracking
+    try:
+        log_params({
+            "canonical_only": args.canonical_only,
+            "include_augmentation": args.include_augmentation,
+            "epsilons": ",".join(map(str, args.epsilons)),
+            "normalize_to_move": args.normalize_to_move,
+            "format": args.format,
+            "rows_states": len(rows_states),
+            "rows_state_actions": len(rows_sa),
+        })
+        log_artifact(args.out / "manifest.json")
+        if wrote_csv:
+            log_artifact(states_csv)
+            log_artifact(sa_csv)
+        if wrote_parquet:
+            log_artifact(states_parquet_path)
+            log_artifact(sa_parquet_path)
+    except Exception:
+        pass
 
     # Emit JSON Schemas
     schema_dir = args.out / "schema"
@@ -257,8 +291,12 @@ def run_export(args: ExportArgs) -> Path:
                 "properties": props,
                 "additionalProperties": False}
 
-    (schema_dir / "ttt_states.schema.json").write_text(json.dumps(infer_schema(rows_states), indent=2))
-    (schema_dir / "ttt_state_actions.schema.json").write_text(json.dumps(infer_schema(rows_sa), indent=2))
+    (schema_dir / "ttt_states.schema.json").write_text(
+        json.dumps(infer_schema(rows_states), indent=2)
+    )
+    (schema_dir / "ttt_state_actions.schema.json").write_text(
+        json.dumps(infer_schema(rows_sa), indent=2)
+    )
     logging.info("Wrote JSON Schemas to %s", schema_dir)
 
     return args.out

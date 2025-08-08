@@ -23,6 +23,12 @@ Optional Parquet support (for `--format parquet|both`):
 pip install .[parquet]
 ```
 
+Optional MLflow tracking:
+
+```bash
+pip install .[tracking]
+```
+
 Run tests:
 
 ```bash

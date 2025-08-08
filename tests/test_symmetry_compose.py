@@ -1,4 +1,4 @@
-from tictactoe.symmetry import apply_action_transform, SYMM_INDEX_MAPS, ALL_SYMS, transform_board
+from tictactoe.symmetry import SYMM_INDEX_MAPS, transform_board
 
 
 def test_symmetry_maps_compose_identity():
