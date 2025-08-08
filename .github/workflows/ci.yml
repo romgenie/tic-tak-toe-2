@@ -178,7 +178,7 @@ jobs:
       - name: Setup micromamba
         uses: mamba-org/setup-micromamba@v2
         with:
-          micromamba-version: "1.5.8"
+          micromamba-version: "1.5.8-0"
           init-shell: bash
       - name: Micromamba info
         shell: bash -l {0}
@@ -257,10 +257,10 @@ jobs:
         run: |
           # Generate a Python environment SBOM; try both CLI names and fall back to runtime env
           set -euxo pipefail
-          if command -v cyclonedx-bom >/dev/null 2>&1; then
-            cyclonedx-bom -o sbom.json -e pip || cyclonedx-bom -o sbom.json -e runtime
-          elif command -v cyclonedx-py >/dev/null 2>&1; then
-            cyclonedx-py -o sbom.json || cyclonedx-py -o sbom.json -e runtime
+          if command -v cyclonedx-py >/dev/null 2>&1; then
+            cyclonedx-py environment -o sbom.json
+          elif command -v cyclonedx-bom >/dev/null 2>&1; then
+            cyclonedx-bom -o sbom.json || true
           else
             echo "No cyclonedx CLI found" >&2
             exit 1
