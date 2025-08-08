@@ -31,7 +31,7 @@ classifiers = [
 
 [project.optional-dependencies]
 parquet = [
-  "pandas==2.1.4",
+  "pandas==2.3.1",
   "pyarrow==14.0.2",
 ]
 dev = [
@@ -50,7 +50,7 @@ dev = [
 ]
 snapshot = [
   "numpy==1.26.4",
-  "pandas==2.1.4",
+  "pandas==2.3.1",
   "pyarrow==14.0.2",
 ]
 tracking = [
