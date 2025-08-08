@@ -1,1 +1,6 @@
 data/tic_tac_toe_all_games.csv
+.venv/
+data_raw/
+*.pyc
+data_clean/
+plans/
