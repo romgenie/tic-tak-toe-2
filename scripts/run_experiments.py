@@ -1,0 +1,174 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import argparse
+import csv
+import hashlib
+import json
+import os
+import sys
+from dataclasses import asdict, dataclass
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List
+
+from tictactoe.datasets import ExportArgs, run_export
+from tictactoe.paths import get_git_commit, get_git_is_dirty
+
+
+@dataclass
+class RunConfig:
+    mode: str  # "min" or "full"
+    seeds: int
+    canonical_only: bool
+    include_augmentation: bool
+    epsilons: List[float]
+    normalize_to_move: bool
+    format: str
+
+
+def _set_deterministic(seed: int | None) -> None:
+    if seed is not None:
+        os.environ.setdefault("PYTHONHASHSEED", str(seed))
+    for var in ("MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS", "NUMEXPR_NUM_THREADS", "OMP_NUM_THREADS"):
+        os.environ.setdefault(var, "1")
+
+
+def _sha256_file(p: Path) -> str:
+    h = hashlib.sha256()
+    with p.open("rb") as f:
+        for chunk in iter(lambda: f.read(8192), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _write_manifest(root: Path, cfg: RunConfig, artifacts: Dict[str, Any]) -> None:
+    # Collect environment metadata
+    locks: Dict[str, Any] = {}
+    repo = Path(__file__).resolve().parents[1]
+    for name in (
+        "requirements-lock.txt",
+        "environment.yml",
+        "conda-linux-64.lock.txt",
+        "conda-osx-64.lock.txt",
+        "conda-osx-arm64.lock.txt",
+        "conda-win-64.lock.txt",
+    ):
+        p = repo / name
+        if p.exists():
+            locks[name] = {"path": str(p), "sha256": _sha256_file(p), "size": p.stat().st_size}
+
+    manifest = {
+        "created_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "git_commit": get_git_commit(),
+        "git_is_dirty": get_git_is_dirty(),
+        "run_config": asdict(cfg),
+        "artifacts": artifacts,
+        "environment_locks": locks,
+    }
+    (root / "MANIFEST.json").write_text(json.dumps(manifest, indent=2))
+
+    # Human-readable overview
+    lines = [
+        "# Run Manifest",
+        "",
+        f"Commit: {manifest['git_commit']}",
+        f"Dirty: {manifest['git_is_dirty']}",
+        f"Mode: {cfg.mode}",
+        "",
+        "## Artifacts",
+    ]
+    for k, v in artifacts.items():
+        lines.append(f"- {k}: {v}")
+    (root / "MANIFEST.md").write_text("\n".join(lines) + "\n")
+
+
+def _write_metrics_csv(root: Path, rows: List[Dict[str, Any]]) -> None:
+    if not rows:
+        return
+    keys = sorted({k for r in rows for k in r.keys()})
+    with (root / "metrics.csv").open("w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=keys)
+        w.writeheader()
+        for r in rows:
+            w.writerow(r)
+    (root / "metrics.json").write_text(json.dumps(rows, indent=2))
+
+
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(description="Run reproducible experiments and collect artifacts")
+    ap.add_argument("mode", choices=["min", "full"], help="Run mode: quick smoke (<1 min) or full")
+    ap.add_argument("--seed", type=int, default=0)
+    ns = ap.parse_args(argv)
+
+    _set_deterministic(ns.seed)
+
+    # Configure run
+    if ns.mode == "min":
+        cfg = RunConfig(
+            mode="min",
+            seeds=1,
+            canonical_only=True,
+            include_augmentation=False,
+            epsilons=[0.1],
+            normalize_to_move=False,
+            format="csv",
+        )
+    else:
+        cfg = RunConfig(
+            mode="full",
+            seeds=3,
+            canonical_only=False,
+            include_augmentation=True,
+            epsilons=[0.05, 0.1],
+            normalize_to_move=True,
+            format="both",
+        )
+
+    # Create timestamped results dir
+    ts = datetime.utcnow().strftime("%Y-%m-%d_%H%M")
+    out_root = Path("results") / ts
+    out_root.mkdir(parents=True, exist_ok=True)
+    (out_root / "figures").mkdir(exist_ok=True)
+    (out_root / "logs").mkdir(exist_ok=True)
+
+    metrics: List[Dict[str, Any]] = []
+    artifacts: Dict[str, Any] = {}
+
+    # Run dataset export (single run in min; repeated in full if desired)
+    export_dir = out_root / ("export_min" if ns.mode == "min" else "export_full")
+    export_path = run_export(
+        ExportArgs(
+            out=export_dir,
+            canonical_only=cfg.canonical_only,
+            include_augmentation=cfg.include_augmentation,
+            epsilons=cfg.epsilons,
+            normalize_to_move=cfg.normalize_to_move,
+            format=cfg.format,
+            verbose=False,
+            cli_argv=list(sys.argv),
+        )
+    )
+    artifacts["export_manifest"] = str(export_path / "manifest.json")
+    if (export_path / "ttt_states.csv").exists():
+        artifacts["states_csv"] = str(export_path / "ttt_states.csv")
+    if (export_path / "ttt_state_actions.csv").exists():
+        artifacts["state_actions_csv"] = str(export_path / "ttt_state_actions.csv")
+    if (export_path / "ttt_states.parquet").exists():
+        artifacts["states_parquet"] = str(export_path / "ttt_states.parquet")
+    if (export_path / "ttt_state_actions.parquet").exists():
+        artifacts["state_actions_parquet"] = str(export_path / "ttt_state_actions.parquet")
+
+    # Minimal metrics example (row counts)
+    manifest = json.loads((export_path / "manifest.json").read_text())
+    metrics.append({"metric": "rows_states", "value": manifest["row_counts"]["states"]})
+    metrics.append({"metric": "rows_state_actions", "value": manifest["row_counts"]["state_actions"]})
+
+    _write_metrics_csv(out_root, metrics)
+    _write_manifest(out_root, cfg, artifacts)
+    print(f"Artifacts written under {out_root}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -3,20 +3,23 @@ repos:
     rev: 24.8.0
     hooks:
       - id: black
+        args: ["--line-length=100"]
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.6.9
     hooks:
       - id: ruff
-        args: [--fix]
+        args: ["--fix"]
+      - id: ruff-format
   - repo: https://github.com/pycqa/isort
     rev: 5.13.2
     hooks:
       - id: isort
-        additional_dependencies: ["toml"]
+        args: ["--profile=black", "--line-length=100"]
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.11.2
     hooks:
       - id: mypy
+        args: ["--install-types", "--non-interactive", "--no-warn-unused-ignores", "src"]
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
