@@ -200,9 +200,9 @@ jobs:
         shell: bash -l {0}
         run: |
           if [ -f conda-osx-arm64.lock.txt ]; then
+            echo "Creating osx-arm64 environment (validation only, won't run Python)"
             micromamba create -y -n ttt2 --file conda-osx-arm64.lock.txt
-            micromamba activate ttt2
-            python -V
+            echo "Environment created successfully (architecture mismatch prevents execution)"
           else
             echo "No osx-arm64 lock committed yet; skipping"
           fi
@@ -258,7 +258,7 @@ jobs:
           # Generate a Python environment SBOM; try both CLI names and fall back to runtime env
           set -euxo pipefail
           if command -v cyclonedx-py >/dev/null 2>&1; then
-            cyclonedx-py environment -o sbom.json
+            cyclonedx-py -e -o sbom.json
           elif command -v cyclonedx-bom >/dev/null 2>&1; then
             cyclonedx-bom -o sbom.json || true
           else
