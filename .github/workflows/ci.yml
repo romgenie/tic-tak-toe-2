@@ -25,6 +25,18 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install "numpy==1.26.4"
+      - name: Show environment
+        run: |
+          set -euxo pipefail
+          python -V
+          pip -V
+          python -c "import sys, platform; print('platform=', platform.platform()); print('executable=', sys.executable)"
+          pip list --format=freeze | tee pip-freeze-${{ runner.os }}-py${{ matrix.python-version }}.txt
+      - name: Upload pip freeze
+        uses: actions/upload-artifact@v4
+        with:
+          name: pip-freeze-${{ runner.os }}-py${{ matrix.python-version }}
+          path: pip-freeze-${{ runner.os }}-py${{ matrix.python-version }}.txt
       - name: Cache pip
         uses: actions/cache@v4
         with:
@@ -44,7 +56,7 @@ jobs:
         run: mypy
       - name: Tests with coverage
         run: |
-          pytest -q
+          pytest -q -rA -vv
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
@@ -85,6 +97,17 @@ jobs:
           python -m pip install -e .
           # Ensure optional benchmark plugin present for broad pytest runs
           python -m pip install pytest-benchmark==4.0.0
+      - name: Show environment (locked)
+        run: |
+          set -euxo pipefail
+          python -V
+          pip -V
+          pip list --format=freeze | tee pip-freeze-locked.txt
+      - name: Upload pip freeze (locked)
+        uses: actions/upload-artifact@v4
+        with:
+          name: pip-freeze-locked
+          path: pip-freeze-locked.txt
       - name: Smoke tests
         env:
           PYTHONHASHSEED: '0'
@@ -108,6 +131,17 @@ jobs:
           python -m pip install -r requirements-lock.txt --require-hashes
           python -m pip install -e .
           python -m pip install pytest-benchmark==4.0.0
+      - name: Show environment (locked small)
+        run: |
+          set -euxo pipefail
+          python -V
+          pip -V
+          pip list --format=freeze | tee pip-freeze-locked-small.txt
+      - name: Upload pip freeze (locked small)
+        uses: actions/upload-artifact@v4
+        with:
+          name: pip-freeze-locked-small
+          path: pip-freeze-locked-small.txt
       - name: Run reproduce-small
         env:
           PYTHONHASHSEED: '0'
@@ -132,6 +166,12 @@ jobs:
         with:
           micromamba-version: "1.5.8"
           init-shell: bash
+      - name: Micromamba info
+        shell: bash -l {0}
+        run: |
+          set -euxo pipefail
+          micromamba --version
+          micromamba info || true
       - name: Create env from conda-lock (linux-64)
         shell: bash -l {0}
         run: |
@@ -193,6 +233,11 @@ jobs:
           # Use cyclonedx-bom compatible with current Python to avoid resolver hiccups
           python -m pip install "cyclonedx-bom>=3,<4"
           python -m pip install .[dev]
+      - name: Tool versions
+        run: |
+          set -euxo pipefail
+          cyclonedx-py --version || true
+          pip list | grep -i cyclonedx || true
       - name: Generate SBOM
         run: |
           # Generate a Python environment SBOM; fall back to requirements if needed
@@ -304,6 +349,10 @@ jobs:
         with:
           name: site
           path: ./site
+      - name: List site contents
+        run: |
+          set -euxo pipefail
+          ls -la ./site | head -200
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
