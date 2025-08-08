@@ -11,7 +11,7 @@ Why it matters:
 - Simple, deterministic rules are perfect for building intuition.
 
 Run:
-  python -m src.01_game_basics --demo
+    python -m src.01_game_basics --demo
 """
 from typing import List
 import argparse

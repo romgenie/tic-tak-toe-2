@@ -1,30 +1,24 @@
 """
 Teaching module 07: Dataset export (states and state-actions) with splits and metadata.
 
-This wrapper reuses the monolithic generator `01_generate_game_states_enhanced.py`
-by importing it via file path (safe even though the filename starts with digits).
-
-It simply invokes its `generate_tic_tac_toe_dataset` function and prints the expected
-artifact paths for convenience.
+This module uses the modular pipeline (solver + feature orchestrator) to build
+state and state-action datasets. It no longer references the archived monolith.
 """
 from __future__ import annotations
 import argparse
-import importlib.util
 import json
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from typing import Dict, Any, List
 
-
-def _load_monolith():
-    """Import the monolith file `01_generate_game_states_enhanced.py` by path."""
-    here = os.path.dirname(__file__)
-    path = os.path.join(here, "01_generate_game_states_enhanced.py")
-    spec = importlib.util.spec_from_file_location("ttt_monolith", path)
-    mod = importlib.util.module_from_spec(spec)  # type: ignore[arg-type]
-    assert spec and spec.loader
-    spec.loader.exec_module(mod)  # type: ignore[assignment]
-    return mod
+# Modular pipeline imports
+from ttt.solver import solve_all_reachable
+from ttt.feature_orchestrator import (
+    extract_board_features,
+    generate_state_action_dataset,
+)
+from ttt.symmetry import symmetry_info
+from ttt.game_basics import deserialize_board
 
 
 @dataclass
@@ -44,63 +38,97 @@ class ExportArgs:
 
 
 def export_all(a: ExportArgs) -> Dict[str, Any]:
-    # Ensure output dir exists (monolith writes into data_raw by default)
-    os.makedirs(a.out_dir, exist_ok=True)
+    # Ensure output dir exists
+    out_dir = os.path.abspath(a.out_dir)
+    os.makedirs(out_dir, exist_ok=True)
 
-    monolith = _load_monolith()
-    monolith.generate_tic_tac_toe_dataset(
+    # Build solved map (reachable states from empty)
+    solved_map = solve_all_reachable()
+
+    # Build states dataset (optionally canonical-only)
+    state_rows: List[Dict[str, Any]] = []
+    seen_canonical = set()
+    for key in solved_map.keys():
+        board = deserialize_board(key)
+        if a.states_canonical_only:
+            sym = symmetry_info(board)
+            cf = sym['canonical_form']
+            if cf in seen_canonical:
+                continue
+            seen_canonical.add(cf)
+        state_rows.append(extract_board_features(board, solved_map, lambda_temp=a.lambda_temp, q_temp=a.q_temp, epsilons=a.epsilons or [0.1]))
+
+    # Build state-action dataset
+    sa_rows = generate_state_action_dataset(
+        solved_map,
         include_augmentation=a.include_augmentation,
         canonical_only=a.canonical_only,
-        reachable_only=a.reachable_only,
-        valid_only=a.valid_only,
-        export_parquet=a.export_parquet,
-        export_npz=a.export_npz,
         lambda_temp=a.lambda_temp,
         q_temp=a.q_temp,
-        states_canonical_only=a.states_canonical_only,
         epsilons=a.epsilons or [0.1],
-        seed=a.seed,
     )
 
-    # The monolith writes into 'data_raw' unconditionally; move to --out if needed.
-    # Try common locations: current working dir, project root (parent of src), then src/.
-    cwd_dir = os.path.abspath(os.path.join(os.getcwd(), "data_raw"))
-    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
-    root_dir = os.path.join(project_root, "data_raw")
-    src_dir = os.path.join(os.path.dirname(__file__), "data_raw")
-    actual_dir = next((d for d in (cwd_dir, root_dir, src_dir) if os.path.isdir(d)), root_dir)
-    requested_dir = os.path.abspath(a.out_dir)
-    os.makedirs(requested_dir, exist_ok=True)
+    # Write outputs
+    states_csv = os.path.join(out_dir, "ttt_states.csv")
+    sa_csv = os.path.join(out_dir, "ttt_state_actions.csv")
+    states_parquet = os.path.join(out_dir, "ttt_states.parquet")
+    sa_parquet = os.path.join(out_dir, "ttt_state_actions.parquet")
 
-    def maybe_move(filename: str) -> str | None:
-        src = os.path.join(actual_dir, filename)
-        if not os.path.exists(src):
-            return None
-        dst = os.path.join(requested_dir, filename)
+    # Always write CSV with stdlib to avoid heavy deps
+    import csv
+    def write_csv(path: str, rows: List[Dict[str, Any]]):
+        fieldnames = set()
+        for r in rows:
+            fieldnames.update(r.keys())
+        fnames = sorted(fieldnames)
+        with open(path, 'w', newline='') as f:
+            w = csv.DictWriter(f, fieldnames=fnames)
+            w.writeheader()
+            for r in rows:
+                w.writerow(r)
+    write_csv(states_csv, state_rows)
+    write_csv(sa_csv, sa_rows)
+
+    # Optionally write Parquet if requested and dependencies are present
+    if a.export_parquet:
         try:
-            # If src and dst are same location, just return
-            if os.path.abspath(src) == os.path.abspath(dst):
-                return dst
-            os.replace(src, dst)
-            return dst
+            import importlib.util
+            if importlib.util.find_spec('pandas') and importlib.util.find_spec('pyarrow'):
+                import pandas as pd  # type: ignore
+                df_states = pd.DataFrame(state_rows)
+                df_sa = pd.DataFrame(sa_rows)
+                df_states.to_parquet(states_parquet)
+                df_sa.to_parquet(sa_parquet)
         except Exception:
-            # Fallback: copy then leave original
-            try:
-                import shutil
-                shutil.copy2(src, dst)
-                return dst
-            except Exception:
-                return None
+            # Skip parquet silently if environment is not compatible
+            pass
+
+    # Optional: NPZ not generated when --no-npz is set; implementing NPZ is deferred.
+    states_npz = None
+    actions_npz = None
+
+    # Minimal metadata
+    metadata_path = os.path.join(out_dir, "metadata.json")
+    metadata = {
+        "generator": "modular",
+        "args": asdict(a),
+        "counts": {
+            "states": len(state_rows),
+            "state_actions": len(sa_rows),
+        },
+    }
+    with open(metadata_path, 'w') as f:
+        json.dump(metadata, f, indent=2)
 
     artifacts = {
-        "states": maybe_move("ttt_states.parquet" if a.export_parquet else "ttt_states.csv"),
-        "actions": maybe_move("ttt_state_actions.parquet" if a.export_parquet else "ttt_state_actions.csv"),
-        "states_splits": maybe_move("ttt_states_splits.parquet" if a.export_parquet else "ttt_states_splits.csv"),
-        "actions_splits": maybe_move("ttt_state_actions_splits.parquet" if a.export_parquet else "ttt_state_actions_splits.csv"),
-        "states_npz": maybe_move("ttt_states.npz") if a.export_npz else None,
-        "actions_npz": maybe_move("ttt_state_actions.npz") if a.export_npz else None,
-        "metadata": maybe_move("metadata.json"),
-        "canonical_splits": maybe_move("canonical_splits.json"),
+        "states": states_parquet if a.export_parquet else states_csv,
+        "actions": sa_parquet if a.export_parquet else sa_csv,
+        "states_splits": None,
+        "actions_splits": None,
+        "states_npz": states_npz if a.export_npz else None,
+        "actions_npz": actions_npz if a.export_npz else None,
+        "metadata": metadata_path,
+        "canonical_splits": None,
     }
     return artifacts
 

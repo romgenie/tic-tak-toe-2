@@ -12,44 +12,38 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Generate datasets (defaults: canonical-only, reachable/valid only, Parquet + NPZ):
+Export datasets with the teaching CLI (modular pipeline; CSV fallback if Parquet deps missing):
 
 ```bash
-python src/01_generate_game_states_enhanced.py
+PYTHONPATH=src python -m src.10_cli export --out data_raw
 ```
 
-Teaching CLI (same outputs, nicer UX):
+Or invoke the exporter module directly for more flags:
 
 ```bash
-python src/10_cli.py export --out data_raw
+PYTHONPATH=src python -m src.07_datasets_export --out data_raw [--csv] [--no-npz] \
+	[--no-augmentation] [--no-canonical-only] [--states-canonical-only] \
+	[--epsilons 0.05,0.1,0.2] [--lambda-temp 0.5] [--q-temp 1.0]
 ```
 
-Use the modular orchestrator (no monolith; CSV fallback if pandas/pyarrow unavailable):
-
-```bash
-python src/10_cli.py export --out data_raw --use-orchestrator
-```
-
-Optional flags:
+Optional flags (via 07_datasets_export):
 
 - `--csv` export to CSV instead of Parquet
-- `--no-npz` disable NPZ export
+- `--no-npz` disable NPZ export (NPZ currently omitted by default)
 - `--no-augmentation` disable symmetry augmentation in actions
-- `--no-canonical-only` include all symmetry variants
+- `--no-canonical-only` include all symmetry variants in state-actions
 - `--states-canonical-only` deduplicate states by canonical form
 - `--epsilons 0.05,0.1,0.2` epsilon values for policy/expectations
 - `--lambda-temp 0.5` DTT soft policy temperature
 - `--q-temp 1.0` Q softmax temperature
-- `--seed 42` randomness for splits
-- `--log-level DEBUG` verbose logging
+- `--seed 42` (reserved; currently unused)
 
 ## Outputs
 
 - `data_raw/ttt_states.parquet|csv` — per-state features and targets
 - `data_raw/ttt_state_actions.parquet|csv` — per-action features and targets
-- `data_raw/ttt_states.npz` — numeric-only arrays (+ planes if present)
-- `data_raw/ttt_state_actions.npz`
-- Split assignments: `*_splits.*` with train/val/test by canonical form
+- Parquet files are emitted if pyarrow is available; otherwise CSVs are always written.
+- Split files and NPZ exports are planned; current exporter focuses on core CSV/Parquet.
 
 ## Key columns (abridged)
 
