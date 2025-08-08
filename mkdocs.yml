@@ -9,6 +9,9 @@ nav:
   - Datasets: datasets.md
   - Data Card: data_card.md
   - Reproducibility: repro.md
+  - Experiments: experiments.md
+  - Results: results.md
+  - Ablations: ablations.md
   - Benchmarks: benchmarks.md
   - CLI Guide: cli.md
   - API Reference:
