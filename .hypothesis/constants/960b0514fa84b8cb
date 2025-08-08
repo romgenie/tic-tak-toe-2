@@ -1,0 +1,4 @@
+# file: /Users/completetech/retro/tic-tak-toe-2/src/tictactoe/symmetry.py
+# hypothesis_version: 6.137.1
+
+['any_symmetric', 'canonical_form', 'canonical_op', 'd1', 'd2', 'diagonal_symmetric', 'hflip', 'horizontal_symmetric', 'id', 'orbit_index', 'orbit_size', 'rot180', 'rot270', 'rot90', 'rotational_symmetric', 'vertical_symmetric', 'vflip']

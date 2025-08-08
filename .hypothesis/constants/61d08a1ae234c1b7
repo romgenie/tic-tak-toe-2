@@ -1,0 +1,4 @@
+# file: /Users/completetech/retro/tic-tak-toe-2/src/tictactoe/features.py
+# hypothesis_version: 6.137.1
+
+[0.0, 'blocked_lines', 'cluster_count', 'col', 'col_threats', 'connected_pairs', 'control_difference', 'diag', 'diag_threats', 'endgame', 'isolated_pieces', 'largest_cluster', 'midgame', 'o_cell_open_lines', 'o_control_percentage', 'o_control_score', 'open_lines', 'opening', 'potential_lines', 'row', 'row_threats', 'semi_open_lines', 'total_connections', 'total_threats', 'x_cell_open_lines', 'x_control_percentage', 'x_control_score']

@@ -1,0 +1,4 @@
+# file: /Users/completetech/retro/tic-tak-toe-2/src/tictactoe/policy.py
+# hypothesis_version: 6.137.1
+
+[0.0, 0.1, 0.5, 1.0, 2.0, 'dtt_action', 'inf', 'optimal_moves', 'policy_soft_dtt', 'policy_soft_q', 'q_values']

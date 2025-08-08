@@ -1,0 +1,19 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "pytest",
+			"type": "shell",
+			"command": "/Users/completetech/retro/tic-tak-toe-2/.venv/bin/python",
+			"args": [
+				"-m",
+				"pytest",
+				"-q"
+			],
+			"problemMatcher": [
+				"$pytest-python"
+			],
+			"group": "build"
+		}
+	]
+}

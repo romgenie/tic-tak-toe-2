@@ -1,0 +1,18 @@
+{
+  "name": "tic-tak-toe-2 dev",
+  "build": {
+    "dockerfile": "../Dockerfile"
+  },
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.testing.pytestEnabled": true
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ]
+    }
+  }
+}

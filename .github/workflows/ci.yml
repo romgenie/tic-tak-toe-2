@@ -1,0 +1,153 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-test:
+    name: Lint, typecheck, test (coverage)
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.11", "3.12"]
+  numpy: ["1.26.*", "2.*"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # Enforce NumPy matrix explicitly first to ensure build against selected ABI
+          python -m pip install "numpy==${{ matrix.numpy }}"
+          python -m pip install .[dev]
+      - name: Lint (ruff)
+        run: ruff check .
+      - name: Format check (black)
+        run: black --check .
+      - name: Typecheck (mypy)
+        run: mypy src
+      - name: Tests with coverage
+        run: |
+          pytest -q --cov=src --cov-branch --cov-report=xml --cov-fail-under=95
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: false
+      - name: Build sdist/wheel
+        run: |
+          python -m pip install build
+          python -m build
+      - name: Export small dataset artifact
+        run: |
+          python -m tictactoe.cli datasets export --out data_raw/ci_small --canonical-only --no-augmentation --epsilons 0.1 --format csv
+      - name: Verify export
+        run: |
+          python scripts/verify_export.py data_raw/ci_small
+      - name: Upload dataset artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-small-dataset-${{ matrix.os }}-py${{ matrix.python-version }}
+          path: data_raw/ci_small
+
+  parquet:
+    name: Parquet export (parquet only)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install with parquet extras
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install .[parquet]
+      - name: Export parquet dataset
+        run: |
+          python -m tictactoe.cli datasets export --out data_raw/parquet_smoke --format parquet --canonical-only --no-augmentation
+      - name: Verify parquet exists
+        run: |
+          test -f data_raw/parquet_smoke/ttt_states.parquet
+          test -f data_raw/parquet_smoke/ttt_state_actions.parquet
+          test -f data_raw/parquet_smoke/manifest.json
+      - name: Upload parquet artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: parquet-smoke
+          path: data_raw/parquet_smoke
+
+  parquet-both:
+    name: Parquet export (both csv+parquet)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install with parquet extras
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install .[parquet]
+      - name: Export both dataset
+        run: |
+          python -m tictactoe.cli datasets export --out data_raw/parquet_both_smoke --format both --canonical-only --no-augmentation
+      - name: Verify both CSV and Parquet exist
+        run: |
+          test -f data_raw/parquet_both_smoke/ttt_states.csv
+          test -f data_raw/parquet_both_smoke/ttt_state_actions.csv
+          test -f data_raw/parquet_both_smoke/ttt_states.parquet
+          test -f data_raw/parquet_both_smoke/ttt_state_actions.parquet
+          test -f data_raw/parquet_both_smoke/manifest.json
+      - name: Upload both artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: parquet-both-smoke
+          path: data_raw/parquet_both_smoke
+
+  docs:
+    name: Build docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: |
+          python -m pip install .[dev]
+          mkdocs build --strict
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: site
+
+  deploy-docs:
+    name: Deploy docs to GitHub Pages
+    needs: docs
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download built site
+        uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: ./site
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./site
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

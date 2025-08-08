@@ -1,62 +1,129 @@
-# Tic-Tac-Toe Research Dataset Generator
+# Tic-tac-toe: exact solver, symmetry, datasets, CLI
 
-Exact game-theoretic solver with symmetry-aware canonicalization and rich ML-friendly features. Exports states and state-action datasets to Parquet/CSV and NPZ.
+[![CI](https://github.com/romgenie/tic-tak-toe-2/actions/workflows/ci.yml/badge.svg)](https://github.com/romgenie/tic-tak-toe-2/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/romgenie/tic-tak-toe-2/branch/main/graph/badge.svg)](https://codecov.io/gh/romgenie/tic-tak-toe-2)
 
-## Quick start
+Docs: <https://romgenie.github.io/tic-tak-toe-2/>
 
-Create a virtual environment and install pinned deps (avoid conda base):
+Research-grade, deterministic pipeline for Tic-tac-toe: exact memoized minimax with
+tie-breaks; symmetry canonicalization and action remapping; composable dataset
+builders; and a small CLI.
 
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
+## Install
 
-Export datasets with the teaching CLI (modular pipeline; CSV fallback if Parquet deps missing):
-
-```bash
-PYTHONPATH=src python -m src.10_cli export --out data_raw
-```
-
-Or invoke the exporter module directly for more flags:
+Python 3.11+ is required.
 
 ```bash
-PYTHONPATH=src python -m src.07_datasets_export --out data_raw [--csv] [--no-npz] \
-	[--no-augmentation] [--no-canonical-only] [--states-canonical-only] \
-	[--epsilons 0.05,0.1,0.2] [--lambda-temp 0.5] [--q-temp 1.0]
+pip install -e .
 ```
 
-Optional flags (via 07_datasets_export):
+Optional Parquet support:
 
-- `--csv` export to CSV instead of Parquet
-- `--no-npz` disable NPZ export (NPZ currently omitted by default)
-- `--no-augmentation` disable symmetry augmentation in actions
-- `--no-canonical-only` include all symmetry variants in state-actions
-- `--states-canonical-only` deduplicate states by canonical form
-- `--epsilons 0.05,0.1,0.2` epsilon values for policy/expectations
-- `--lambda-temp 0.5` DTT soft policy temperature
-- `--q-temp 1.0` Q softmax temperature
-- `--seed 42` (reserved; currently unused)
+```bash
+pip install .[parquet]
+```
 
-## Outputs
+Run tests:
 
-- `data_raw/ttt_states.parquet|csv` — per-state features and targets
-- `data_raw/ttt_state_actions.parquet|csv` — per-action features and targets
-- Parquet files are emitted if pyarrow is available; otherwise CSVs are always written.
-- Split files and NPZ exports are planned; current exporter focuses on core CSV/Parquet.
+```bash
+pytest -q
+```
 
-## Key columns (abridged)
+## CLI
 
-- Perfect play: `value_current`, `plies_to_end`, `optimal_moves_count`, `q_value_i`, `dtt_action_i`
-- Policies: `policy_uniform_i`, `policy_soft_i`, `policy_soft_q_i`, `epsilon_policy_XXX_i`
-- Symmetry: `canonical_form`, `canonical_op`, `canonical_action_map_i`, `orbit_size`, `orbit_index`
-- Tactical: `is_immediate_win`, `is_immediate_block`, `creates_fork`, `blocks_opponent_fork`, `is_safe_move`
-- Robustness: `winning_reply_count`, `drawing_reply_count`, `losing_reply_count`, `worst_reply_q`, `safe_1ply`, `safe_2ply`
-- Difficulty: `difficulty_score`, `reply_branching_factor`, `reply_branching_after_best_reply`, `child_wins/draws/losses`, margins/gaps
-- Planes: `x_plane_i`, `o_plane_i`, `empty_plane_i`, `to_move_plane_i`, `legal_plane_i`, `best_plane_i`
+```bash
+# export datasets (CSV; Parquet if pandas+pyarrow installed)
+ttt datasets export --out data_raw -v \
+    --epsilons 0.05,0.1 --normalize-to-move
 
-## Notes
+# show symmetry info (reachable example)
+ttt symmetry --board 100020000 -v
 
-- The solver derives exact values and tie-breaks via distance-to-termination.
-- Canonical split prevents leakage across symmetric states.
-- For correct runtime, use the pinned `requirements.txt` (NumPy<2 with matching pandas/pyarrow).
+# solve a board
+ttt solve --board 100020000
+
+# tactics preview
+ttt tactics --board 100020200
+```
+
+Input validation: board strings must be length 9 of digits 0,1,2 and represent a
+reachable state (X starts; counts are legal; no double-winners). Invalid inputs
+exit with a non-zero code.
+
+## Datasets
+
+Two CSVs are emitted under the chosen output directory:
+
+- `ttt_states.csv`: one row per reachable state (optionally canonical only).
+- `ttt_state_actions.csv`: one row per legal action from each state (with optional
+    symmetry augmentation via index remapping; no recomputation).
+
+Parquet files are additionally written if `pandas` + `pyarrow` are available.
+
+### Schema highlights
+
+- Common keys: `board_state` (string of 9), `canonical_form`, `orbit_size`.
+- State features include `current_player`, `value_current`, `plies_to_end`,
+    per-cell `q_value_i`/`dtt_action_i` (None on illegal), and policy distributions
+    computed on the normalized board when `normalize_to_move=True`.
+        Extended columns (deterministic):
+        - Control (symmetric): `x_control_score`, `o_control_score`, `x_control_percentage`,
+            `o_control_percentage`, `control_difference`.
+        - Threats by player: `x_row_threats`, `x_col_threats`, `x_diag_threats`, `x_total_threats` (and `o_*`).
+        - Connectivity by player: `*_connected_pairs`, `*_total_connections`, `*_isolated_pieces`,
+            `*_cluster_count`, `*_largest_cluster`.
+        - Pattern strength by player: `*_open_lines`, `*_semi_open_lines`, `*_blocked_lines`, `*_potential_lines`.
+        - Tactics counts: `x_two_in_row_open`, `o_two_in_row_open`.
+        - Cell potentials: `x_cell_open_lines_i`, `o_cell_open_lines_i` for i in 0..8.
+        - Game phase: `game_phase` in {opening, midgame, endgame}.
+- State-action rows include `action`, `q_value` in {-1,0,+1}, `dtt_action` (plies),
+  `optimal_action` (0/1), `policy_optimal_uniform`, `policy_soft_dtt`,
+  `policy_soft_q`, and per-epsilon columns `epsilon_policy_XXX`.
+
+Determinism: epsilon policies are analytic; there’s no RNG. Re-running exports with
+the same args produces identical outputs. A `manifest.json` is written alongside
+exports with args, git commit, dirty flag, python & package versions, row counts, and schema hashes.
+
+### dtt_action (distance to termination)
+
+`dtt_action` is the number of plies until the game ends after taking that action
+and then playing optimally on both sides.
+
+Tie-breaks use `dtt_action`:
+
+- Among wins and draws, prefer a smaller `dtt_action`.
+- Among losses, prefer a larger `dtt_action` (delay the loss).
+
+### normalize_to_move
+
+When enabled in state feature extraction, piece labels are swapped so the
+side-to-move is always X=1. Policies are computed on this normalized board, but
+q-values and legality still align, because moves are indexed by cell and
+normalization only swaps labels 1<->2.
+
+Terminal states: state-action rows are emitted only for legal (non-terminal)
+actions. Epsilon policies assign mass only to legal actions.
+
+## Paths & environment
+
+Data directories are configurable via env vars:
+
+- `TTT_DATA_RAW` (defaults to `data_raw/` in repo)
+- `TTT_DATA_CLEAN` (defaults to `data_clean/` in repo)
+
+The repo root can be overridden with `TTT_REPO_ROOT`. Otherwise, the nearest
+parent containing `.git/` is used; falling back to the package location.
+
+## Contributing & CI
+
+This repo ships with formatting (`black`), linting (`ruff`), type-checking (`mypy`),
+and tests (`pytest`, `hypothesis`). GitHub Actions runs these on pushes and PRs, and also
+exports a small dataset to verify determinism and uploads the CSVs/manifest as artifacts.
+
+## Citation
+
+Please cite via `CITATION.cff`.
+
+## License
+
+MIT — see `LICENSE`.

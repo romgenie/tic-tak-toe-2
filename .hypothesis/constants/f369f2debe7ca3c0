@@ -1,0 +1,4 @@
+# file: /Users/completetech/retro/tic-tak-toe-2/src/tictactoe/datasets.py
+# hypothesis_version: 6.137.1
+
+[0.1, ' with augmentation', '1.0.0', 'Solved %d states', '__version__', 'args', 'canonical_form', 'canonical_only', 'cli_argv', 'created_at', 'dataset_version', 'epsilons', 'files', 'git_commit', 'git_is_dirty', 'include_augmentation', 'manifest.json', 'normalize_to_move', 'numpy', 'packages', 'pandas', 'parquet_written', 'pyarrow', 'python', 'python_version', 'row_counts', 'schema_hash', 'state_actions', 'state_actions_csv', 'states', 'states_csv', 'states_parquet', 'ttt_states.csv', 'ttt_states.parquet', 'utf-8', 'w']
