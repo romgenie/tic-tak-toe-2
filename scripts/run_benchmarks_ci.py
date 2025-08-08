@@ -32,7 +32,7 @@ def main() -> int:
         "-q",
         "-k",
         "benchmark",
-    "--no-cov",
+        "--no-cov",
         "--benchmark-min-time=0.1",
         "--benchmark-warmup=on",
         "--benchmark-warmup-iterations=10",
@@ -73,7 +73,6 @@ def main() -> int:
     (benches_dir / "manifest.json").write_text(json.dumps(manifest, indent=2))
     print("Wrote benchmark artifacts to", benches_dir)
     return 0
-
 
 
 if __name__ == "__main__":
