@@ -70,7 +70,7 @@ ttt = "tictactoe.cli:main"
 testpaths = [
   "tests"
 ]
-addopts = "-q"
+addopts = "-q --cov=tictactoe --cov-branch --cov-report=term-missing --cov-fail-under=90"
 
 [tool.black]
 line-length = 100
@@ -109,6 +109,18 @@ disallow_untyped_defs = false
 no_implicit_optional = false
 check_untyped_defs = false
 ignore_missing_imports = true
+
+[tool.coverage.run]
+source = ["tictactoe"]
+branch = true
+omit = [
+  "*/.venv/*",
+  "*/site-packages/*",
+]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
 
 [tool.hatch.build]
 include = [
