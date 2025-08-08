@@ -23,6 +23,8 @@ def main() -> int:
 
     # Run pytest-benchmark and get raw JSON
     raw_path = benches_dir / "pytest-benchmark.json"
+    # Disable coverage here to avoid global --cov-fail-under causing failures
+    # when running only the benchmark subset.
     cmd = [
         sys.executable,
         "-m",
@@ -30,8 +32,6 @@ def main() -> int:
         "-q",
         "-k",
         "benchmark",
-    # Disable coverage here to avoid global --cov-fail-under from pyproject
-    # causing failures when running only the benchmark subset.
     "--no-cov",
         "--benchmark-min-time=0.1",
         "--benchmark-warmup=on",
@@ -73,6 +73,7 @@ def main() -> int:
     (benches_dir / "manifest.json").write_text(json.dumps(manifest, indent=2))
     print("Wrote benchmark artifacts to", benches_dir)
     return 0
+
 
 
 if __name__ == "__main__":
