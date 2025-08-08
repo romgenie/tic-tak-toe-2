@@ -1,0 +1,29 @@
+{
+  "title": "Tic-tac-toe: exact solver, symmetry, datasets, and CLI",
+  "description": "Research-grade, deterministic Tic-tac-toe solver (memoized minimax with DTT tie-breaks), symmetry canonicalization and action remapping, composable dataset builders, and a small CLI. Includes dataset exports with manifests and checksums for reproducibility.",
+  "upload_type": "software",
+  "creators": [
+    { "name": "romgenie", "affiliation": "Independent" }
+  ],
+  "license": "mit-license",
+  "keywords": [
+    "tic-tac-toe",
+    "minimax",
+    "symmetry",
+    "datasets",
+    "reinforcement learning",
+    "game theory",
+    "reproducibility"
+  ],
+  "language": "eng",
+  "access_right": "open",
+  "related_identifiers": [
+    {
+      "relation": "isSupplementTo",
+      "identifier": "https://github.com/romgenie/tic-tak-toe-2"
+    }
+  ],
+  "scripts": {
+    "docs-serve": "make docs-serve"
+  }
+}

@@ -213,6 +213,40 @@ def run_export(args: ExportArgs) -> Path:
             except Exception:
                 checksums[label] = None
 
+    # Optional environment lock identifiers (for provenance)
+    # We look for common lock files at the repo root and record their SHA-256.
+    env_locks: Dict[str, Any] = {}
+    try:
+        # Find repo root by walking up to a directory containing .git
+        here = Path.cwd().resolve()
+        repo_root = None
+        for p in [here] + list(here.parents):
+            if (p / ".git").exists():
+                repo_root = p
+                break
+        if repo_root is None:
+            repo_root = here
+        candidates = [
+            ("pip_requirements_lock", repo_root / "requirements-lock.txt"),
+            ("conda_lock_config", repo_root / "conda-lock.yml"),
+        ]
+        # Include platform-specific conda lock files if present
+        for plat in ("linux-64", "osx-64", "osx-arm64", "win-64"):
+            candidates.append((f"conda_lock_{plat}", repo_root / f"conda-{plat}.lock.yml"))
+            candidates.append((f"conda_txt_{plat}", repo_root / f"conda-{plat}.lock.txt"))
+        for label, path in candidates:
+            if path.exists():
+                try:
+                    env_locks[label] = {
+                        "path": str(path),
+                        "sha256": sha256_file(path),
+                        "size": path.stat().st_size,
+                    }
+                except Exception:
+                    env_locks[label] = {"path": str(path), "sha256": None}
+    except Exception:
+        env_locks = {}
+
     manifest = {
         "dataset_version": DATASET_VERSION,
         "created_at": datetime.now(timezone.utc).isoformat(),
@@ -240,6 +274,7 @@ def run_export(args: ExportArgs) -> Path:
         "files": files,
         "checksums": checksums,
         "parquet_written": wrote_parquet,
+    "environment_locks": env_locks,
     }
     (args.out / "manifest.json").write_text(json.dumps(manifest, indent=2))
     logging.info("Wrote manifest.json with metadata and schema hashes")

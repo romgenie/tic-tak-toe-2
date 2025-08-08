@@ -8,14 +8,32 @@ This page documents typical performance for solver and export operations and how
 - OS: macOS 14.x or Ubuntu 22.04.
 - Python: 3.11 or 3.12.
 - NumPy: tested on 1.26.x and 2.x.
-- Environment: `pip install .[dev]` (optionally add `.[parquet]` for Parquet runs).
+- Environment: `pip install -r requirements-lock.txt --require-hashes && pip install -e .` (for archival) or `pip install .[dev]` for local dev. Optionally add `.[parquet]` for Parquet runs.
 
 We use `pytest-benchmark` to time hot paths. Benchmarks are stable and avoid tiny timers via `--benchmark-min-time=0.1`.
+
+### Deterministic protocol
+
+To keep CPU threading and hashing deterministic across runs, set:
+
+```bash
+export PYTHONHASHSEED=0
+export MKL_NUM_THREADS=1
+export OPENBLAS_NUM_THREADS=1
+export OMP_NUM_THREADS=1
+```
+
+Then run the benchmarks with a warmup:
+
+```bash
+pytest -q -k benchmark --benchmark-min-time=0.1 --benchmark-warmup=on --benchmark-warmup-iterations=10
+```
 
 ## Reproduce locally
 
 ```bash
-pip install .[dev]
+pip install -r requirements-lock.txt --require-hashes
+pip install -e .[dev]
 # optional for parquet
 pip install .[parquet]
 
@@ -45,3 +63,14 @@ Numbers vary slightly by machine and Python/NumPy version but are consistently w
 
 - All pipelines are pure Python with vectorized components where applicable.
 - CSV order is deterministic, which can add minimal sorting cost but is essential for reproducibility.
+
+## CI artifacts
+
+Automated runs publish raw `pytest-benchmark` JSON and a small summary tied to:
+
+- Git commit
+- OS/arch and Python version
+- NumPy version
+- Environment lock identifiers (hash of requirements-lock.txt and/or conda-lock)
+
+See the CI job artifacts for the current branch. The JSON can be downloaded and compared using `pytest-benchmark compare`.

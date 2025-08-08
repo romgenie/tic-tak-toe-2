@@ -1,4 +1,6 @@
 site_name: Tic-Tac-Toe 2 Docs
+site_url: https://romgenie.github.io/tic-tak-toe-2/
+repo_url: https://github.com/romgenie/tic-tak-toe-2
 theme:
   name: material
 nav:

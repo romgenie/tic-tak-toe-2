@@ -2,7 +2,7 @@
 
 - Name: ttt_states / ttt_state_actions
 - Version: 1.1.0
-- License: MIT for code; generated datasets are public domain (CC0) unless otherwise noted.
+- License: Code is MIT; generated datasets are licensed under CC BY 4.0 unless otherwise noted.
 
 ## Provenance
 
@@ -18,7 +18,7 @@ Data are generated deterministically by the packaged perfect-play solver over al
 
 ## Schema
 
-See schema JSON files under each export directory (schema/*.schema.json).
+See schema JSON files under each export directory (schema/*.schema.json). Schemas include a `$schema` field and are versioned implicitly via the `dataset_version` field in the export manifest.
 
 ## Splits
 

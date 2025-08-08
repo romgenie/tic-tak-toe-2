@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/romgenie/tic-tak-toe-2/actions/workflows/ci.yml/badge.svg)](https://github.com/romgenie/tic-tak-toe-2/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/romgenie/tic-tak-toe-2/branch/main/graph/badge.svg)](https://codecov.io/gh/romgenie/tic-tak-toe-2)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.0000000.svg)](https://doi.org/10.5281/zenodo.0000000)
+[![Reproducible build](https://img.shields.io/badge/reproducible-locked-blue)](docs/repro.md#reproduce-with-locks)
 
 Docs: <https://romgenie.github.io/tic-tak-toe-2/>
 
@@ -9,12 +11,24 @@ Research-grade, deterministic pipeline for Tic-tac-toe: exact memoized minimax w
 tie-breaks; symmetry canonicalization and action remapping; composable dataset
 builders; and a small CLI.
 
+Archival: releases are archived on Zenodo with a DOI. After cutting a GitHub release, enable Zenodo for this repo and replace the placeholder DOI badge/link above with the minted DOI for that tag.
+
 ## Install
 
 Python 3.11+ is required.
 
+Locked, archival installs (recommended for papers):
+
 ```bash
+# pip-tools hashed lock
+pip install -r requirements-lock.txt --require-hashes
 pip install -e .
+```
+
+Standard dev install:
+
+```bash
+pip install -e .[dev]
 ```
 
 Optional Parquet support (for `--format parquet|both`):
@@ -113,6 +127,26 @@ normalization only swaps labels 1<->2.
 Terminal states: state-action rows are emitted only for legal (non-terminal)
 actions. Epsilon policies assign mass only to legal actions.
 
+### Reference snapshot for archival
+
+For long-term reproducibility, publish a small reference export with its `manifest.json` as a GitHub release asset (and optionally deposit alongside the code on Zenodo). Use the provided target:
+
+```bash
+make reproduce-small
+```
+
+This writes `data_raw/small/*` and verifies checksums and schema hashes.
+
+Reference snapshot assets are attached to GitHub Releases (see DOI badge) with checksums and a manifest binding to the exact commit and environment locks.
+
+## Reproduce with locks
+
+See docs: docs/repro.md#reproduce-with-locks. We publish both pip hashed locks (`requirements-lock.txt`) and conda-lock files for major platforms.
+
+## Supply chain & provenance
+
+CI generates and uploads a CycloneDX SBOM (sbom.json). Dataset manifests record commit SHA, dirty flag, and lock file hashes. Release assets include the SBOM and lock files.
+
 ## Paths & environment
 
 Data directories are configurable via env vars:
@@ -129,10 +163,20 @@ This repo ships with formatting (`black`), linting (`ruff`), type-checking (`myp
 and tests (`pytest`, `hypothesis`). GitHub Actions runs these on pushes and PRs, and also
 exports a small dataset to verify determinism and uploads the CSVs/manifest as artifacts.
 
+Docs: build locally with MkDocs Material or serve live reload:
+
+```bash
+make docs-serve
+```
+
 ## Citation
 
-Please cite via `CITATION.cff`.
+Please cite via `CITATION.cff`. Example:
+
+> Author(s). Tic-tac-toe: exact solver, symmetry, datasets, and CLI. Version ${version}. DOI: 10.5281/zenodo.xxxxxxx
 
 ## License
 
-MIT — see `LICENSE`.
+Code: MIT — see `LICENSE`.
+
+Data: unless otherwise stated, generated datasets are licensed under CC BY 4.0.

@@ -18,11 +18,11 @@ Features: Positional control, threats, connectivity, pattern strength, phase, an
 
 Potential biases: Tic-tac-toe is trivial; policy mass concentrates on optimal moves. Augmentation changes class balance across action rows.
 
-Licensing: MIT; see LICENSE.
+Licensing: Code is MIT. Generated datasets are CC BY 4.0 unless otherwise stated; see README.
 
 Intended uses: Teaching, benchmarking, verifying RL targets. Misuses: Treating counts as representative of stochastic games or non-perfect-play agents.
 
-Determinism & Manifest: The manifest.json includes row counts, checksums, orbit_size_distribution, terminal_split, parquet_written, and schema hashes. The schemas are emitted under export/schema/*.schema.json.
+Determinism & Manifest: The manifest.json includes row counts, checksums, orbit_size_distribution, terminal_split, parquet_written, and schema hashes. The schemas are emitted under export/schema/*.schema.json and are versioned implicitly via `dataset_version`.
 
 ## Parquet outputs
 

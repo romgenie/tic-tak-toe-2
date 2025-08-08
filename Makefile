@@ -18,3 +18,16 @@ reproduce-all:
 	@echo "Building docs"
 	$(PYTHON) -m pip install .[dev]
 	mkdocs build --strict
+
+.PHONY: docs-serve
+docs-serve:
+	@echo "Serving docs at http://127.0.0.1:8000 (Ctrl+C to stop)"
+	$(PYTHON) -m pip install -q .[dev]
+	mkdocs serve -a 127.0.0.1:8000
+
+.PHONY: help
+help:
+	@echo "Targets:"
+	@echo "  reproduce-small   Export small canonical dataset and verify"
+	@echo "  reproduce-all     Full deterministic pipeline + docs build"
+	@echo "  docs-serve        Serve MkDocs locally"

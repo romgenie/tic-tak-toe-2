@@ -1,0 +1,19 @@
+version: 1
+channels:
+  - conda-forge
+platforms:
+  - linux-64
+  - osx-64
+  - osx-arm64
+  - win-64
+dependencies:
+  - python=3.11
+  - pip
+  # Note:
+  # We intentionally do NOT install the local package via pip here because
+  # conda-lock cannot parse local path specifiers like ".[extras]" in an
+  # environment YAML. Instead, first create the environment from the lock,
+  # then install the project in editable mode with desired extras, e.g.:
+  #   pip install -e '.[dev]'
+  # or for parquet/tracking extras:
+  #   pip install -e '.[dev,parquet,tracking]'

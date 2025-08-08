@@ -1,0 +1,48 @@
+name: Release snapshot export
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-and-attach:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install package (dev + parquet)
+        run: |
+          python -m pip install -U pip
+          python -m pip install .[dev,parquet]
+
+      - name: Generate small reference export
+        env:
+          PYTHONHASHSEED: '0'
+          MKL_NUM_THREADS: '1'
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+        run: |
+          python -m tictactoe.cli --deterministic --seed 0 datasets export --out data_raw/small --format csv --canonical-only
+          python scripts/verify_export.py data_raw/small
+
+      - name: Upload artifact (small reference export)
+        uses: actions/upload-artifact@v4
+        with:
+          name: small-reference-export
+          path: |
+            data_raw/small/**
+
+      - name: Attach to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            data_raw/small/manifest.json
+            data_raw/small/ttt_states.csv
+            data_raw/small/ttt_state_actions.csv

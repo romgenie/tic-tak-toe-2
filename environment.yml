@@ -6,3 +6,4 @@ dependencies:
   - pip
   - pip:
       - -e .
+# For fully locked environments, prefer conda-lock generated lock files committed per-platform.
