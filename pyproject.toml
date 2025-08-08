@@ -46,6 +46,7 @@ dev = [
   "mkdocs==1.6.0",
   "mkdocstrings[python]==0.25.2",
   "mkdocs-material==9.5.31",
+  "mkdocs-autorefs<1.0.0",
 ]
 snapshot = [
   "numpy==1.26.4",
@@ -80,6 +81,10 @@ ignore = []
 
 [tool.mypy]
 python_version = "3.11"
+[tool.hatch.build]
+include = [
+  "src/tictactoe/py.typed",
+]
 strict = false
 warn_unused_ignores = true
 warn_redundant_casts = true

@@ -2,19 +2,20 @@ site_name: Tic-Tac-Toe 2 Docs
 theme:
   name: material
 nav:
-  - Overview: docs/index.md
-  - Theory: docs/theory.md
-  - Datasets: docs/datasets.md
-  - Reproducibility: docs/repro.md
-  - Benchmarks: docs/benchmarks.md
-  - CLI Guide: docs/cli.md
+  - Overview: index.md
+  - Theory: theory.md
+  - Datasets: datasets.md
+  - Reproducibility: repro.md
+  - Benchmarks: benchmarks.md
+  - CLI Guide: cli.md
   - API Reference:
-      - tictactoe: docs/api/tictactoe.md
+      - tictactoe: api/tictactoe.md
 plugins:
   - search
   - mkdocstrings:
       handlers:
         python:
+          paths: [src]
           options:
             show_source: true
 markdown_extensions:

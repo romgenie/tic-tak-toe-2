@@ -17,7 +17,7 @@ Python 3.11+ is required.
 pip install -e .
 ```
 
-Optional Parquet support:
+Optional Parquet support (for `--format parquet|both`):
 
 ```bash
 pip install .[parquet]
@@ -32,9 +32,12 @@ pytest -q
 ## CLI
 
 ```bash
-# export datasets (CSV; Parquet if pandas+pyarrow installed)
+# export datasets (CSV by default)
 ttt datasets export --out data_raw -v \
-    --epsilons 0.05,0.1 --normalize-to-move
+    --epsilons 0.05,0.1 --normalize-to-move --format csv
+
+# request both CSV and Parquet (requires pandas+pyarrow installed via .[parquet])
+ttt datasets export --out data_raw -v --format both --canonical-only
 
 # show symmetry info (reachable example)
 ttt symmetry --board 100020000 -v
@@ -58,7 +61,7 @@ Two CSVs are emitted under the chosen output directory:
 - `ttt_state_actions.csv`: one row per legal action from each state (with optional
     symmetry augmentation via index remapping; no recomputation).
 
-Parquet files are additionally written if `pandas` + `pyarrow` are available.
+Parquet files are written only when requested (`--format parquet|both`) and when `pandas` + `pyarrow` are installed. If you request `--format both` without the deps, the export will still succeed with CSVs and `manifest.json` noting `parquet_written=false`.
 
 ### Schema highlights
 
@@ -112,7 +115,7 @@ Data directories are configurable via env vars:
 - `TTT_DATA_CLEAN` (defaults to `data_clean/` in repo)
 
 The repo root can be overridden with `TTT_REPO_ROOT`. Otherwise, the nearest
-parent containing `.git/` is used; falling back to the package location.
+parent containing `.git/` is used; falling back to the current working directory (never site-packages).
 
 ## Contributing & CI
 

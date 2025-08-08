@@ -3,10 +3,8 @@ message: If you use this software, please cite it as below.
 title: Tic-tac-toe exact solver, symmetry, and datasets
 authors:
   - family-names: Romgenie
-    name-particle: ''
-    given-names: ''
+    given-names: Maintainers
 license: MIT
 version: 1.1.0
-doi: TBD
 date-released: 2025-08-08
 repository-code: https://github.com/romgenie/tic-tak-toe-2

@@ -1,0 +1,4 @@
+# file: /Users/completetech/retro/tic-tak-toe-2/src/tictactoe/paths.py
+# hypothesis_version: 6.137.1
+
+[2.0, '--porcelain', '-C', '.git', 'HEAD', 'TTT_DATA_CLEAN', 'TTT_DATA_RAW', 'TTT_REPO_ROOT', 'data_clean', 'data_raw', 'git', 'ref:', 'rev-parse', 'status']

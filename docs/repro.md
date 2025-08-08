@@ -17,7 +17,7 @@ This runs the CLI export with CSV outputs and then executes `scripts/verify_expo
 
 If you prefer to run the steps manually:
 
-    python -m tictactoe.cli export --out-dir data_clean/small --format csv --canonical-only
+    python -m tictactoe.cli datasets export --out data_clean/small --format csv --canonical-only
     python scripts/verify_export.py data_clean/small
 
 Expected outputs (tree abbreviated):
@@ -34,7 +34,11 @@ The verify script will fail with a non-zero exit code on any mismatch.
 
 ## Notes on Parquet
 
-Parquet export is optional and requires pandas + pyarrow. If you request `--format parquet` (or `both`) without those dependencies installed, the CLI will exit with a clear error. CSV is always available.
+Parquet export is optional and requires pandas + pyarrow. Install extras with:
+
+    pip install .[parquet]
+
+Use `--format parquet` or `--format both` to write Parquet. If you request `--format parquet` without the dependencies installed, the CLI will raise a clear error. If you request `--format both` without the dependencies, the export will gracefully degrade to CSV-only and still write `manifest.json` with `parquet_written=false`.
 
 ## Determinism
 
