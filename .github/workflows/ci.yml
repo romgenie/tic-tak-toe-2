@@ -71,7 +71,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          # requirements-lock.txt was generated with Python 3.12; use the same for reproducibility
+          python-version: '3.12'
       - name: Install from requirements-lock.txt with hashes
         run: |
           python -m pip install --upgrade pip
@@ -93,7 +94,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
       - name: Install from requirements-lock.txt with hashes
         run: |
           python -m pip install --upgrade pip
@@ -122,6 +123,7 @@ jobs:
         uses: mamba-org/setup-micromamba@v2
         with:
           micromamba-version: "1.5.8"
+          init-shell: bash
       - name: Create env from conda-lock (linux-64)
         shell: bash -l {0}
         run: |
@@ -172,11 +174,13 @@ jobs:
       - name: Install cyclonedx tools
         run: |
           python -m pip install -U pip
-          python -m pip install cyclonedx-bom
+          # Use cyclonedx-bom compatible with current Python to avoid resolver hiccups
+          python -m pip install "cyclonedx-bom>=3,<4"
           python -m pip install .[dev]
       - name: Generate SBOM
         run: |
-          cyclonedx-py -o sbom.json
+          # Generate a Python environment SBOM; fall back to requirements if needed
+          cyclonedx-py -o sbom.json || cyclonedx-py -o sbom.json -e runtime
       - name: Upload SBOM
         uses: actions/upload-artifact@v4
         with:
@@ -274,7 +278,11 @@ jobs:
       pages: write
       id-token: write
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - uses: actions/checkout@v4
       - name: Download built site
         uses: actions/download-artifact@v4
         with:

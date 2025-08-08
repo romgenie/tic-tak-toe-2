@@ -30,6 +30,9 @@ def main() -> int:
         "-q",
         "-k",
         "benchmark",
+    # Disable coverage here to avoid global --cov-fail-under from pyproject
+    # causing failures when running only the benchmark subset.
+    "--no-cov",
         "--benchmark-min-time=0.1",
         "--benchmark-warmup=on",
         "--benchmark-warmup-iterations=10",
