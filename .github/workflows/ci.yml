@@ -20,6 +20,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Pre-pin NumPy for macOS Python 3.11
+        if: runner.os == 'macOS' && matrix.python-version == '3.11'
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "numpy==1.26.4"
       - name: Cache pip
         uses: actions/cache@v4
         with:
@@ -78,6 +83,8 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements-lock.txt --require-hashes
           python -m pip install -e .
+          # Ensure optional benchmark plugin present for broad pytest runs
+          python -m pip install pytest-benchmark==4.0.0
       - name: Smoke tests
         env:
           PYTHONHASHSEED: '0'
@@ -100,6 +107,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements-lock.txt --require-hashes
           python -m pip install -e .
+          python -m pip install pytest-benchmark==4.0.0
       - name: Run reproduce-small
         env:
           PYTHONHASHSEED: '0'
@@ -127,15 +135,23 @@ jobs:
       - name: Create env from conda-lock (linux-64)
         shell: bash -l {0}
         run: |
-          micromamba create -y -n ttt --file conda-linux-64.lock.txt || echo "No linux lock committed yet; skipping"
-          micromamba activate ttt || true
-          python -V || true
+          if [ -f conda-linux-64.lock.txt ]; then
+            micromamba create -y -n ttt --file conda-linux-64.lock.txt
+            micromamba activate ttt
+            python -V
+          else
+            echo "No linux lock committed yet; skipping"
+          fi
       - name: Create env from conda-lock (osx-arm64)
         shell: bash -l {0}
         run: |
-          micromamba create -y -n ttt2 --file conda-osx-arm64.lock.txt || echo "No osx-arm64 lock committed yet; skipping"
-          micromamba activate ttt2 || true
-          python -V || true
+          if [ -f conda-osx-arm64.lock.txt ]; then
+            micromamba create -y -n ttt2 --file conda-osx-arm64.lock.txt
+            micromamba activate ttt2
+            python -V
+          else
+            echo "No osx-arm64 lock committed yet; skipping"
+          fi
 
   benchmarks:
     name: Run pytest-benchmark and upload JSON
